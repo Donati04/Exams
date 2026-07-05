@@ -1,0 +1,4 @@
+dig A www.unimore.it @8.8.8.8
+dig MX unimore.it @155.185.1.2
+dig SOA unimore.it @155.155.1.2
+dig NS unimore.it @193.0.14.129

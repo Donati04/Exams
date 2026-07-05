@@ -1,0 +1,247 @@
+\documentclass[openany]{book}
+
+% Dimensione pagina e margini
+% 'a4paper' è lo standard EU/UK, altrimenti metti altro
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+
+% Lista package utili
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
+\usepackage[italian]{babel}
+\usepackage{color,soul}
+\usepackage{cancel}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage{forest}
+\usepackage{tikz-qtree}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage[many]{tcolorbox}
+
+\tcbuselibrary{listings}
+
+% Definizione colori personalizzati
+\usetikzlibrary{shadows}
+% Colori Box
+\definecolor{panna}{RGB}{255, 250, 245}
+\definecolor{forest_green}{RGB}{46,111,64}
+\definecolor{oceano}{RGB}{73, 77, 126}
+\definecolor{iceberg}{rgb}{0.44, 0.65, 0.82}
+\definecolor{light-gray}{gray}{0.96}
+% Colori Bash
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{commandcolor}{rgb}{0.1,0.1,0.7}
+% Colori C
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+%Colori Python
+\definecolor{pycomments}{rgb}{0.0, 0.5, 0.0}
+\definecolor{pystrings}{rgb}{0.13, 0.54, 0.13}
+\definecolor{pykeywords}{rgb}{0.0, 0.0, 0.8}
+\definecolor{pysocketmethods}{rgb}{0.63, 0.13, 0.94}
+
+% Box generica
+\newtcolorbox{boxDef}{
+    % fontupper = \bf, % Font bold
+    boxrule = 0.5pt, % Grandezza bordo
+    colframe=gray!30, % Colore bordo
+    colback=gray!5, % Colore background
+    width=0.95\textwidth,
+}
+
+% Box bash e terminale
+\newtcblisting{bashbox}[1]{
+    listing only,
+    listing engine=listings,
+    listing options={style=shell}, 
+    before skip=8pt,    % Spazio sopra il box
+    after skip=8pt,     % Spazio sotto il box
+    top=2pt, bottom=2pt, left=5pt, right=5pt,
+    %sharp corners,
+    boxrule=0.5pt,
+    colback=gray!5,
+    colframe=gray!30,
+}
+
+% Box c
+\newtcblisting{cbox}[1]{
+    listing only,
+    listing engine=listings,
+    listing options={style=customc}, 
+    before skip=8pt,                
+    after skip=8pt,                 
+    top=2pt, bottom=2pt, left=5pt, right=5pt,
+    %sharp corners,
+    boxrule=0.5pt,
+    colback=gray!5,
+    colframe=gray!30,
+}
+
+% Box Python
+\newtcblisting{pybox}[1]{
+    listing only,
+    listing engine=listings,
+    listing options={style=custompython}, 
+    before skip=8pt,                
+    after skip=8pt,                 
+    top=2pt, bottom=2pt, left=5pt, right=5pt,
+    %sharp corners,
+    boxrule=0.5pt,
+    colback=gray!5,
+    colframe=gray!30,
+}
+
+% Stile bash
+\lstdefinestyle{shell}{
+    commentstyle=\color{codegreen},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    %keepspaces=true,                 
+    numbers=none,                    
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,         
+    tabsize=2,
+    language=bash,
+    % --- CLASSE 1: Comandi principali (Magenta) ---
+    classoffset=0,
+    morekeywords={sudo, apt-get, cd, ls, mkdir, repeat},
+    keywordstyle=\color{magenta},
+    % --- CLASSE 2: Permessi e File (Arancione/Marrone) ---
+    classoffset=1,
+    morekeywords={chmod, chown, cat, more, less},
+    keywordstyle=\color{orange},
+    % --- CLASSE 3: Networking e altri tool (Blu) ---
+    classoffset=2,
+    morekeywords={nc, ping, ifconfig, ssh, ipaddr, iproute, ip, link, route, brctl, dig},
+    keywordstyle=\color{blue},
+    % --- CLASSE 3: Altra roba (Green) ---
+    classoffset=3,
+    morekeywords={donati@linux},
+    keywordstyle=\color{forest_green},
+    % --- RESET (obbligatorio alla fine) ---
+    classoffset=0
+}
+
+% Stile c
+\lstdefinestyle{customc}{
+    language=C,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    morekeywords={printf, scanf, malloc, free, socket, bind, listen, accept, read, write, close, strlen, strcpy},
+    keywordstyle=[2]\color{teal},
+    commentstyle=\color{codegreen},
+    stringstyle=\color{codepurple},
+    numbers=none,
+    breaklines=true,
+    tabsize=4,
+    showstringspaces=false
+}
+
+% Stile Pyhton
+\lstdefinestyle{custompython}{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{pykeywords}\bfseries,
+    morekeywords=[2]{socket, bind, listen, accept, connect, send, recv, sendall, close, setsockopt, AF_INET, SOCK_STREAM, SOCK_DGRAM},
+    keywordstyle=[2]\color{pysocketmethods}\bfseries,
+    commentstyle=\color{pycomments}\itshape,
+    stringstyle=\color{pystrings},
+    numbers=none,
+    breaklines=true,
+    tabsize=4,
+    showstringspaces=false
+}
+
+
+% Titolo indice più grande
+\renewcommand{\contentsname}{\huge{Indice}}
+
+% Le pagine vuote non hanno numero
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
+\hbox{}
+\thispagestyle{empty}
+\newpage
+\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+
+
+%------------------------------------------------
+%	Inizio documento
+%------------------------------------------------
+\begin{document}
+
+%------------------------------------------------
+%	Copertina
+%------------------------------------------------
+\begin{titlepage}
+
+	\raggedleft % Tutto allineato a destra
+	\vspace*{\baselineskip} % Spazio in cima alla pagina
+	
+	%------------------------------------------------
+	%	Autore + Anno Accademico
+	%------------------------------------------------
+    {\large \textbf{Anno Accademico 2025/2026}}
+	\\
+    \vspace*{0.05\textheight}
+    {\LARGE \textbf{Leonardo Donati}}
+    \vspace*{0.167\textheight}
+    
+	%------------------------------------------------
+	%	Titolo e sottotitolo
+	%------------------------------------------------
+    % Prima linea del titolo
+	\textbf{\LARGE Appunti}\\[\baselineskip] 
+
+    % Titolo principale
+	{{\Huge \textbf{Reti e Calcolatori}}}\\[\baselineskip]
+
+    % Sottotitolo
+	{\Large \textit{Teoria e esercizi.}}
+	\vfill % Spazio fra titolo e footer
+    
+	%------------------------------------------------
+	%  Immagine
+	%------------------------------------------------
+    %{\Large \textbf{Leonardo Donati}}
+	%\\
+    \vspace*{0.05\textheight}
+    \includegraphics[scale=0.20]{Images/Unimore.jpg}
+	%\vspace*{3\baselineskip} % Whitespace at the bottom of the page
+
+\end{titlepage}
+
+%------------------------------------------------
+%	Indice
+%------------------------------------------------
+\newpage
+\centering
+\tableofcontents
+
+%------------------------------------------------
+%	Inizio appunti
+%------------------------------------------------
+\raggedright
+\input{Sections/protocols}
+\input{Sections/standard_suite}
+\input{Sections/host_to_network}
+\input{Sections/livello_ip}
+\input{Sections/livello_trasporto}
+\input{Sections/socker_programming}
+\input{Sections/dns}
+\input{Sections/esercizi}
+
+
+\end{document}
