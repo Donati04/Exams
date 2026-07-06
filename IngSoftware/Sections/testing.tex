@@ -99,3 +99,58 @@ Gli obiettivi sono trovare i difetti, comprendere il prodotto e generare delle d
     \includegraphics[width=0.5\linewidth]{Images/testing/review.png}
     \caption{Schema di review.}
 \end{figure}
+
+Dove:
+\begin{itemize}
+  \item \textbf{PLANNING:} definire lo scopo, stimare l'effort necessario, selezionare i
+    partecipanti a cui assegnare gli oggetti da revisionare e i rispettivi ruoli.
+  \item \textbf{INIZIALIZZAZIONE:} condividere documenti e artefatti, spiegare e chiarificare.
+  \item \textbf{FASE INDIVIDUALE:} il revisionatore individua tutte le parti e cerca dei difetti.
+  \item \textbf{PROBLEMI E ANALISI:} tramite meeting comunica gli errori tramite dei log.
+  \item \textbf{FIXING:} gli autori correggono gli errori e verificano le metriche richieste.
+\end{itemize}
+
+\section{Black Box Testing}
+\begin{boxDef}
+\textbf{\textcolor{brown}{Black Box Testing:}} attività di testing senza avere la conoscenza del funzionamento interno del software, come se fossimo un utilizzatore. \\ 
+\textbf{\textcolor{blue}{Vantaggi:}} posso mettermi in una prospettiva diversa ed esistono tanti tester senza skill specifiche che posso far lavorare anc he senza conoscenze. \\ 
+\textbf{\textcolor{blue}{Svantaggi:}} la copertura del codice può essere limitata, può essere inefficiente se non conosco come funziona il codice e sono difficili.
+\end{boxDef}
+
+\begin{enumerate}
+  \item \textbf{\textcolor{brown}{Equivalence class partitioning:}} il comportamento dell'utente è riconoscibile da classi di equivalenza, in cui vengono raggruppati dei valori con cui
+    il software si comporta nello stesso modo, ovvero che se quella classe ha un errore allora è previsto in tutte le classi di equivalenza. Definisco dei
+    vincoli sugli attributi di tali classi e quando li testo devo valutarle tutte almeno una volta, l'unica cosa proibita è testare più classi invalide.
+  \item \textbf{\textcolor{brown}{Boundary values analysis:}} sfrutta il fatto che spesso gli errori sono dovuti ai confini delle classi di equivalenza non ad un elemento della classe.
+    Anche qui è proibito testare più valori critici alla volta. Si testa di solito il valore minimo e appena sopra, massimo e appena sotto e uno nominale.
+\item \textbf{\textcolor{brown}{Decision table:}} adatte a contesti complessi permettono di rappresentare per ogni combinazione di condizioni di ingresso il valore delle uscite.
+    Posso anche raggruppare con indifferenze alcune combinazioni, oppure posso in alternativa utilizzare i grafi causa effetto che sono equivalenti.
+  \item \textbf{\textcolor{brown}{Use-case testing:}} permette di verificare scenari tipici e eccezionali, per garantire una copertura completa su tutti i flussi di lavoro, anche quelli
+    meno percorsi. Per effettuare tali test si possono combinare altre tecniche viste e a volte è richiesto la conoscenza di informazioni aggiuntive.
+\end{enumerate}
+
+
+\section{White Box Testing}
+\begin{boxDef}
+\textbf{\textcolor{brown}{White Box Testing:}} attività di testing che valuta internamente il codice.  \\
+\textbf{\textcolor{blue}{Vantaggi:}} posso apportare modifiche in diretta sul codice e ottimizzarlo.\\ 
+\textbf{\textcolor{blue}{Svantaggi:}} è difficile mantenere i test di questo tipo, servono dei tester competenti e richiedono tool speciali.
+\end{boxDef}
+
+\begin{enumerate}
+  \item \textbf{\textcolor{brown}{Grafici controllo di flusso:}} si tratta di creare rappresentazioni visive per il flusso del codice, definendo quanto e quali percorsi vanno testati.
+    \begin{enumerate}
+      \item \textbf{Statement coverage:} tramite le regole di Beizer ci permette di verificare che tutte le linee del codice siano coperte.
+      \item \textbf{Decision coverage:} permette di percorrere in entrambi i modi i nodi decisionali del codice, garantendo quindi anche la statement coverage.
+      \item \textbf{Condition coverage:} analoga alla copertura decisionale se le condizioni sono atomiche, altrimenti le decompongo e le valuto vere e false.
+      \item \textbf{Decision condition coverage:} si tratta dell'unione delle due precedenti tecniche per garantire la copertura completa del codice branch.
+    \end{enumerate}
+  \item \textbf{\textcolor{brown}{Path Analysis:}} si tratta di analizzare solamente i percorsi più corti possibili, evitando iterazioni, scegliendo solo quelli sensati e semplici. 
+    La teoria di \textbf{McCabe} dice che esistono alcuni percorsi base che vengono riutilizzati per garantire la copertura. È articolata nell'analisi del numero dei percorsi,
+    inclusione o meno degli stessi nel testing, infine testing dei percorsi linearmente indipendenti che introducono un nuovo arco oltre i precedenti.
+    Il numero di \textbf{percorsi logici} è $2^{\text{numero di decisioni}}$, mentre il numero di \textbf{percorsi linearmente indipendenti} è il numero ciclomatico del grafo aumentato di 1.
+  \item \textbf{\textcolor{brown}{Testing di esperienza:}} permette di indovinare gli errori, fare \textbf{testing esplorativo}, controllare una \textbf{check list} o utilizzare 
+    software come \textbf{\textcolor{blue}{SpotBugs}}.
+\end{enumerate}
+
+
