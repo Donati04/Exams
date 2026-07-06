@@ -1,0 +1,55 @@
+% PROVA
+\RequirePackage{xcolor}
+%\RequirePackage[most]{tcolorbox}
+%\RequirePackage{tikz}
+%\usetikzlibrary{calc,arrows.meta,decorations.pathreplacing}
+
+\newcommand{\bl}[1]{{\footnotesize\sffamily\MakeUppercase{#1}}}
+
+% ---- washi paper day mode (default) ----
+  \definecolor{pagebg}{HTML}{FBF6F3}      % Sfondo della pagina
+  \definecolor{boxbg}{HTML}{F7EDF0}       % Sfondo interno delle box
+  \definecolor{boxbg2}{HTML}{F1E3E9}
+  \definecolor{ink}{HTML}{2C2731}         % Colore del testo principale
+  \definecolor{inkdim}{HTML}{6A6370}      % Colore per le note (grigio)
+  \definecolor{rule}{HTML}{E2D3DA}
+  \definecolor{sakura}{HTML}{C85C80}      % Rosa per "Properties"
+  \definecolor{sakuradeep}{HTML}{B0466A}  % Rosa scuro per i Teoremi ("thm")
+  \definecolor{sakurapale}{HTML}{F2D2DC}
+  \definecolor{matcha}{HTML}{43814F}      % Verde per gli esempi ("ex")
+  \definecolor{kin}{HTML}{9C6B1C}         % Oro/Senape per l'intuizione ("intuition")
+  \definecolor{ai}{HTML}{7A4B68}          % Prugna per le definizioni ("defn")
+
+  % ---------------------------------------------------------------------
+%  Callout boxes
+%     \begin{defn}[title] ... \end{defn}        plum   — definitions
+%     \begin{thm}[title]  ... \end{thm}          rose   — theorems
+%     \begin{ex}[title]   ... \end{ex}           green  — worked examples
+%     \begin{intuition}[t]... \end{intuition}    gold   — the "why"
+%     \begin{props}[title]... \end{props}        pink   — rule lists
+%     \begin{note}[title] ... \end{note}         grey   — asides
+%     \begin{key} ... \end{key}                  centred boxed formula
+%  Build your own:  \begin{snote}{<colour>}{<title>} ... \end{snote}
+% ---------------------------------------------------------------------
+\newtcolorbox{snote}[2]{%
+  enhanced, breakable, sharp corners,
+  colback=boxbg, coltext=ink, boxrule=0pt, frame hidden,
+  borderline west={3pt}{0pt}{#1},
+  left=14pt, right=12pt, top=9pt, bottom=10pt,
+  fonttitle=\sffamily\bfseries\color{#1},
+  title={#2},
+  attach title to upper,
+  after title={\par\vskip3pt{\color{#1!45}\hrule height0.5pt}\vskip7pt},
+}
+\newenvironment{defn}[1][]{\begin{snote}{ai}{\bl{Definition}\hspace{0.7em}\textmd{\normalsize #1}}}{\end{snote}}
+\newenvironment{thm}[1][]{\begin{snote}{sakuradeep}{\bl{Theorem}\hspace{0.7em}\textmd{\normalsize #1}}}{\end{snote}}
+\newenvironment{ex}[1][]{\begin{snote}{matcha}{\bl{Worked Example}\hspace{0.7em}\textmd{\normalsize #1}}}{\end{snote}}
+\newenvironment{intuition}[1][]{\begin{snote}{kin}{\bl{Intuition}\hspace{0.7em}\textmd{\normalsize #1}}}{\end{snote}}
+\newenvironment{props}[1][Properties]{\begin{snote}{sakura}{\bl{#1}}}{\end{snote}}
+\newenvironment{note}[1][Note]{\begin{snote}{inkdim}{\bl{#1}}}{\end{snote}}
+
+\newtcolorbox{key}{%
+  enhanced, breakable, sharp corners,
+  colback=sakura!12, colframe=sakura, boxrule=0.8pt,
+  arc=2pt, left=10pt,right=10pt,top=10pt,bottom=10pt, halign=center,
+}
