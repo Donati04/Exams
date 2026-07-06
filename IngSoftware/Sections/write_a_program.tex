@@ -1,0 +1,45 @@
+\chapter{Scrivere un programma}
+Per scrivere correttamente un programma ci sono diverse fasi importanti:
+\begin{itemize}
+    \item \textbf{\textcolor{brown}{Specifica dei requisiti:}}
+    \begin{enumerate}
+        \item \textbf{Parte teorica:} obiettivi, input attesi, modalità per generare le specifiche.
+        \item \textbf{Parte applicativa:} uso dello \textcolor{blue}{use-case diagram UML} per la rappresentazione dei requisiti.
+        \item \textbf{Requisiti funzionali:} richieste del programma, funzionalità.
+        \item \textbf{Specifiche \textcolor{red}{non} funzionali:} vincoli di design:
+        \begin{enumerate}
+            \item \textbf{Requisiti di performance:} tempo massimo in base alla dimensione degli input.
+            \item \textbf{Requisiti di tempo-reale:} completare il processing in un tempo utile all'utente.
+            \item \textbf{Requisiti di modificabilità/manutenibilità:} aspettazioni di vita del programma e se andrà modificato.
+            \item \textbf{Interfaccia utente:} CLI oppure GUI.
+            \item \textbf{Dimensioni massime dell'input:} così scelgo algoritmi che ottimizzano le performance.
+            \item \textbf{Piattaforma di sviluppo:} si intende architettura del sistema, OS, librerie da usare per la portabilità.
+            \item \textbf{Requisiti di tempo/scadenza:} ovviamente la deadline impatta i costi.
+            \item \textbf{Linguaggio di programmazione:} di solito è una scelta di design ma potrebbe essere fissata.
+            \item \textbf{Algoritmi:} anche questi possono essere imposti, ma di solito le performance influenzano la scelta.
+            \item \textbf{Struttura del software.}
+        \end{enumerate}
+    \end{enumerate}
+    \item \textbf{\textcolor{brown}{Progettazione:}}
+    \begin{enumerate}
+        \item \textbf{Parte teorica:} stili architetturali, decomposizione funzionale, ORM, definizione e problematiche, metriche per la valutazione.
+        \item \textbf{Parte applicativa:} diagrammi \textcolor{blue}{UML} e design patterns per la progettazione del software.
+        \item \textbf{Stima dell'effort richiesto:} a livello di costi e di tempo, tipicamente suddividendolo in sottoproblemi e valutandoli.
+    \end{enumerate}
+    \item \textbf{\textcolor{brown}{Implementazione:}} in base alla completezza della progettazione posso iniziare subito col codice o fare un po' e un po'.
+    \begin{enumerate}
+        \item \textbf{Implementazione:} scelta delle convenzioni, dei nomi e delle maiuscole, in modo che siano significativi.
+        \begin{enumerate}
+            \item Conoscenza della standard library per risparmiare tempo ed eseguire test di unità e mostrare il codice al altri.
+        \end{enumerate}
+    \end{enumerate}
+    \item \textbf{\textcolor{brown}{Testing/Debug:}} utilizzare test case per vedere se ci sono errori e tramite Debug risolverli e ricominciare il testing.
+    \begin{enumerate}
+        \item \textbf{Testing:} va fatto sia durante lo sviluppo che al completamento.
+        \begin{enumerate}
+            \item \textbf{Black box testing:} non viene guardato il codice, ma i requisiti (quindi tendenzialmente fatta dal cliente BETA).
+            \item \textbf{White box testing:} viene testato con valori specifici conoscendo il codice (usando valori critici ALPHA).
+        \end{enumerate}
+    \end{enumerate}
+    \item \textbf{\textcolor{brown}{Distribuzione e manutenzione.}}
+\end{itemize}

@@ -1,0 +1,82 @@
+\chapter{Metriche di Qualità}
+Il codice sorgente non è l'unico \textbf{\textcolor{blue}{artefatto}} da valutare quando si verifica la bontà del codice.\\
+L'\textbf{analisi dei requisiti} è uno degli aspetti su cui posso valutare la qualità del software:
+\begin{itemize}
+    \item \textbf{\textcolor{brown}{Consistenza} nella progettazione.}
+    \item \textbf{\textcolor{brown}{Completezza} nella progettazione.}
+\end{itemize}
+
+L'obiettivo delle \textbf{\textcolor{blue}{metriche}} è quello di valutare attraverso il \textbf{ciclo di vita} del software come questo si conforma a certe richieste di qualità.
+Riduce la soggettività, anche se comunque richiede il giudizio di un essere umano.
+
+\section{Metrica Software}
+\begin{boxDef}
+\textbf{\textcolor{brown}{Metrica Software:}} è una misura quantitativa su cui il sistema di software, i componenti o i processi hanno una proprietà o caratteristica.
+\begin{enumerate}
+    \item Metriche di \textbf{prodotto}: sul prodotto finale o intermedio sia statico che runtime.
+    \item Metriche di \textbf{processo}: riguardano metodi, tecniche e strumenti impiegati nello sviluppo e mantenimento del sistema.
+    \item Metriche di \textbf{progetto}: riguardano il progetto intero.
+\end{enumerate}
+\end{boxDef}
+
+\subsection{Misure Statiche}
+Valutano il software senza eseguirlo e sono misure facilmente definibili:
+\begin{itemize}
+    \item \textbf{LOC (Lines of Code)}, esistono anche SLOC, CLOC, NCLOC, LLOC, BLOC sono variazioni eventuali del numero di linee facili da misurare.
+    \item \textbf{Duplicazione} del codice: evitare codice simile scritto più volte che andrebbe mantenuto contemporaneamente ogni modifica e non è praticabile. Esistono tecniche per rilevarla tramite match sintattici, o token match: 
+    \begin{itemize}
+        \item Duplicazione del primo \textbf{tipo}: spezzoni di codici che sono identiche tranne per formattazione e spazi.
+        \item Duplicazione del secondo \textbf{tipo}: spezzoni di codici che sono totalmente uguali tranne qualche variazione di token, variabili o primo tipo.
+        \item Duplicazione del \textbf{terzo} tipo: spezzoni uguali con l'aggiunta o la rimozione di qualche statement più duplicazione secondo tipo.
+        \item Duplicazione del \textbf{quarto} tipo: due porzioni di codice che fanno la stessa funzione ma implementato in modo diverso
+    \end{itemize}
+    \item \textbf{Nesting Level (NL):} livello di innesto del software basandosi sul conteggio delle linee di codice rispetto a un livello di innestamento. Utilizzata per individuare quali parti del codice sono più difficili da mantenere, aggiustare ma anche quelle che sarebbe meglio modificare.
+    \item Metriche di complessità di \textbf{Halstead}: utilizza dei contatori \textit{n1}, \textit{n2} per contare il numero di operatori e operandi distinti e \textit{N1}, \textit{N2} per le occorrenze. Misurano il volume, l'effort, la difficoltà, la lunghezza del programma, il tempo richiesto, il numero di bug presenti.
+    \item Complessità ciclomatica di \textbf{McCabe}: è il numero di cicli indipendenti. Misura la complessità della progettazione strutturale del programma e rappresenta il numero massimo di percorsi.
+\end{itemize}
+
+\subsubsection{Dipendenza fra moduli}
+Nelle metriche statiche viene anche presa in considerazione la dipendenza fra moduli, una \textbf{relazione} formale tra due pacchetti di \textbf{dipendenza}, quindi librerie in comune, comunicazione tra classi eccetera.\\
+La metrica usata è \textbf{\textcolor{blue}{Henry-Kafura}} che misura il \textbf{flusso intermodulare}, basato su \textbf{fan-in} e \textbf{fan-out} di una classe/pacchetto:
+\begin{itemize}
+    \item \textbf{\textcolor{brown}{Accoppiamento}}, il modulo fa riferimento a una dipendenza esterna ad esso, cioè dipendenza \textbf{intermodulo}. Ci sono vari gradi di accoppiamento:
+    \begin{itemize}
+        \item Accoppiamento di \textbf{contenuto}: due unità accedono a dati o procedure interne altrui, difficile fare una modifica solo su una.
+        \item Accoppiamento \textbf{comune}: due unità accedono alla stessa variabile globale, comune in applicativi molto estesi.
+        \item Accoppiamento di \textbf{controllo}: un'unità passa un'informazione di controllo per influenzare il comportamento dell'altra.
+        \item Accoppiamento per \textbf{stampa}: un'unità passa un gruppo di dati ad un'altra, molto più di quelli necessari ottimali.
+        \item Accoppiamento \textbf{dati}: tra un'unità e un'altra vengono passati solamente i dati necessari, quindi bassa interdipendenza.
+    \end{itemize}
+    Si usa la misura di \textbf{\textcolor{blue}{Fenton-Melton}} per assegnare un \textbf{grado}.
+    \item \textbf{\textcolor{brown}{Coesione}}, il modulo fa riferimento a dipendenze interne allo stesso, ovvero dipendenza \textbf{intramodulo}. Ci sono vari livelli di coesione:
+    \begin{itemize}
+        \item Livello \textbf{funzionale}: svolge un'unica attività chiara e delineata, non viene modificato anche se non è molto flessibile.
+        \item Livello \textbf{sequenziale}: svolge un'attività principale, ma i confini di tale operazione non sono del tutto definiti.
+        \item Livello \textbf{comunicazione}: le attività svolgono operazioni sugli stessi dati e dimostra una vicinanza interna maggiore della procedurale.
+        \item Livello \textbf{procedurale}: i processi sono correlati in modo procedurale, connessi da qualche sequenza di controllo.
+        \item Livello \textbf{temporale}: gli elementi che vengono eseguiti nello stesso slot temporale vengono raggruppati, esempio l'inizializzazione.
+        \item Livello \textbf{logico}: il codice svolge una serie di compiti simili, cioè esiste una relazione tra gli elementi ma è molto debole.
+        \item Livello \textbf{coincidenza}: il codice svolge due o più funzioni non correlate ed è dovuto a modifiche successive nel codice.
+    \end{itemize}
+    Come misurazioni per la coesione del software si usano \textbf{\textcolor{blue}{Program Slice}} e \textbf{\textcolor{blue}{Data Slice}}, basati su \textbf{fette} di \textbf{dati} e \textbf{codice}.
+\end{itemize}
+
+\subsubsection{Metriche per l'OOP}
+Esistono metriche uniche per i linguaggio \textbf{OOP}, misurano se le classi che comunicano hanno basso \textbf{accoppiamento} e \textbf{coesione} forte. \\
+Per esempio, le \textbf{\textcolor{blue}{Metriche CK}} che misurano la \textbf{complessità} di progettazione e come impattano sulla \textbf{qualità} la \textbf{manutenibilità}, \textbf{riutilizzabilità} e altri:
+\begin{itemize}
+    \item \textbf{\textcolor{brown}{Weighted Method per Class (WMC):}}somma pesata di tutti i metodi della classe, per esempio assegnando 1 ad ognuno.
+    \item \textbf{\textcolor{brown}{Depth of Inheritance Tree (DIT):}} la profondità massima di dipendenze da una classe alla sua radice, ma ha un'interpretazione mista.
+    \item \textbf{\textcolor{brown}{Number Of Children (NOC):}} il numero di sottoclassi di una classe, un alto NOC potrebbe aumentare la complessità e forse la qualità.
+    \item \textbf{\textcolor{brown}{Coupling Between Object (CBO):}} il numero di classi a cui una classe è accoppiata, ma aumenta la difficoltà di manutenibilità.
+    \item \textbf{\textcolor{brown}{Response For a Class (RFC):}}l'insieme dei metodi coinvolti nella risposta ad un messaggio inviato a un oggetto della classe.
+    \item \textbf{\textcolor{brown}{Lack of Cohesion in Methods (LCOM):}} misura la correlazione tra i metodi e le istanze locali delle variabili di una classe.
+\end{itemize}
+
+\subsection{Metriche Dinamiche}
+Valutano il software in esecuzione e sono più complesse perché analizzano il \textbf{comportamento}:
+\begin{itemize}
+    \item \textbf{\textcolor{brown}{Copertura del codice:}} quanto \textbf{codice} viene eseguito di tutto quello scritto.
+    \item \textbf{\textcolor{brown}{Bugs-per-Line-of-Code:}} numero di \textbf{bug} per linea di codice.
+    \item \textbf{\textcolor{brown}{Utilizzo delle feature:}} quanto le feature che sono state sviluppate risultano davvero \textbf{utili} all'utente. 
+\end{itemize}

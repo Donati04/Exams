@@ -1,0 +1,88 @@
+\chapter{Ingegneria dei Requisiti}
+
+\begin{boxDef}
+\textbf{\textcolor{brown}{Cos'è:}} serie di attività legate alla convalida dell'insieme finale dei requisiti del programma.
+\end{boxDef}
+Fra queste attvità:
+\begin{itemize}
+    \item \textbf{Preparazione:} concordare ed acquisire le risorse necessarie per pianificare il processo di ingegnerizzazione dei requisiti.
+    \item \textbf{Elicitazione.}
+    \item \textbf{Definizione e documentazione.}
+    \item \textbf{Prototipazione.}
+    \item \textbf{Analisi dei requisiti.}
+    \item \textbf{Controllo e validazione.}
+    \item \textbf{Specificazione requisiti.}
+    \item \textbf{Accettazione requisiti.}
+\end{itemize} 
+
+\section{Elicitation Process}
+I \textbf{requisiti} devono riflettere le necessità del cliente e coinvolgere anche il management non solo l'immaginazione del team:
+\begin{itemize}
+    \item \textbf{\textcolor{brown}{Elicitazione di alto livello:}} comprendere la relazione con il business e le giustificazioni per il software.
+    \begin{itemize}
+        \item Profilo dell'azienda a livello di necessità, giustificazioni, scopi, vincoli, funzionalità, fattori di successo e utente.
+        \item Con questo si intende budget per distinguere i \textit{nice-to-have}, scadenza, necessità quotidiane degli utilizzatori.
+    \end{itemize}
+    \item \textbf{\textcolor{brown}{Elicitazione di dettaglio:}} ottenere informazioni dettagliate riguardo necessità e desideri dell'utente.
+    \begin{itemize}
+        \item Questi metodi possono comprendere incontri verbali, report scritti, form da compilare online.
+    \end{itemize}
+\end{itemize}
+
+Una volta che il piano è stato approvato si possono decidere le \textbf{\textcolor{blue}{risorse}} per lo sviluppo.
+
+\vspace*{0.02\textheight}
+Nell'ottenere informazioni sul progetto si preferiscono interazioni orali, anche riguardo politiche tecniche e manuali tecnici
+Ci sono sei dimensioni dei requisiti:
+\begin{enumerate}
+    \item \textbf{Flusso di lavoro dell'azienda (\textcolor{forest_green}{BF}).}
+    \item \textbf{Formato della data e dei dati (\textcolor{forest_green}{DF}).}
+    \item \textbf{Funzionalità individuali (\textcolor{forest_green}{IF}).}
+    \item \textbf{Preesistenza di interfacce e sistemi:} controllo software, trasferimento dati, gestione risposte, possibilità di riprovare \textbf{(\textcolor{forest_green}{IS})}.
+    \item \textbf{Interfaccia utente:} tramite prototipazione \textbf{(\textcolor{forest_green}{UI})}.
+    \item \textbf{Performance, affidabilità e altri vincoli:} riguardano il dominio dell'applicazione (transazioni, lunga vita, finanziaria) \textbf{(\textcolor{forest_green}{FC})}.
+\end{enumerate}
+
+\section{Analisi dei Requisiti}
+L'analisi dei requisiti ha il compito di \textbf{\textcolor{blue}{categorizzarli}} o raggrupparli e poi assegnare a ciascun gruppo una \textbf{\textcolor{blue}{priorità}}:
+\begin{itemize}
+    \item Posso fare la scelta di \textbf{categorizzare} i requisiti usando lo schema delle sei dimensioni descritto in precedenza.
+    \begin{itemize}
+        \item I requisiti possono essere limitati da alcuni vincoli come ad esempio poche risorse, poco tempo, poche competenze.
+    \end{itemize}
+    \item Per stabilire le \textbf{priorità} si considerano le richieste attive, la competitività, la possibilità di vendita e i problemi futuri.
+    \begin{itemize}
+        \item Di solito si usa un processo di gerarchia analitico (\textbf{AHP}) dove ogni requisito è comparato a tutti gli altri con dei valori di intensità.
+    \end{itemize}
+    \item Gli \textbf{use-case} orientati ad oggetti aiutano molto a descrivere i requisiti e analizzare i sistemi.
+    \begin{itemize}
+        \item Solitamente includono le funzionalità di base, precondizioni e postcondizioni, condizioni di errori e flussi alternativi.
+        \item Nel processo di creazione bisogna individuare gli attori coinvolti, gli use-case collegati e le condizioni di confine del sistema.
+    \end{itemize}
+    \item In alternativa per l'analisi posso utilizzare il modello \textbf{FURPS+} che è un acronimo che si articola in:
+    \begin{itemize}
+        \item \textbf{Funzionalità.}
+        \item \textbf{Utilizzabilità.}
+        \item \textbf{Affidabilità. (Reliability).}
+        \item \textbf{Performance.}
+        \item \textbf{Compabilità.}
+        \item \textbf{+ Requisiti di design, implementazione, interfaccia e fisici.}
+    \end{itemize}
+\end{itemize}
+
+\section{Definizione, Prototipazione e Review}
+Ogni requisito segna cosa vuole il \textbf{cliente}, gli \textbf{input/output}e il \textbf{processo} da attuare. Tramite opportuni formalismi, dopo avere prototipato i requisiti, possiamo descrivere tramite \textbf{standard \textcolor{blue}{IEEE}} un sommario dei requisiti:
+\begin{itemize}
+    \item Tra queste notazioni ci sono i diagrammi \textbf{UML} e in particolare gli \textbf{use-case}, \textbf{activity diagram}, \textbf{Data Flow Diagram}, \textbf{ER}.
+    \item Il livello di \textbf{dettaglio} dipende dalla complessità del progetto, dall'attività di supporto, l'esperienza e le pre-release.
+\end{itemize}
+
+\section{Requirement specification}
+Al termine dell'intero processo di rilevazione dei requisiti devono essere prodotti questi documenti informativi:
+\begin{itemize}
+    \item \textbf{BRS:} specifiche del business tra i più importanti che contiene scopo del business, principali investitori, ambiente del business, mission, business model, processi, vincoli, policy e struttura del business.
+    \item \textbf{StRS:} specifiche degli investitori che contiene le stesse cose del precedente ma declinate sugli investitori.
+    \item \textbf{SyRS:} specifiche dei dispositivi coinvolti come sopra ma aggiunge la sicurezza del sistema, privacy, ciclo di vita, caratteristiche e packaging.
+    \item \textbf{SRS:} il più utilizzato che parla del software che contiene anche le limitazioni, le prospettive del prodotto, interfacce, utilizzabilità, standard.
+\end{itemize}
+

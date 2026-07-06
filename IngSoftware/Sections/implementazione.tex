@@ -1,0 +1,103 @@
+\chapter{Implementazione}
+\begin{boxDef}
+\textbf{\textcolor{brown}{Implementazione:}} è l'atto di trasformare il \textbf{design} di dettaglio, spesso fatto in questa fase, in un \textbf{programma} in un certo linguaggio di programmazione. \\
+Una \textbf{buona} implementazione di un codice coinvolge \textbf{leggibilità}, \textbf{manutenibilità}, \textbf{performance}, \textbf{tracciabilità} a elementi di design, \textbf{correttezza}, \textbf{completezza}.
+Il programmatore si concentra subito sulla correttezza e le performance, ma è importante pensare prima a leggibilità e manutenibilità per avere gli altri.
+\end{boxDef}
+
+\section{Modello di Qualità del Prodotto Software}
+Composto da \textbf{8} caratteristiche, interne (\textbf{white box} in development) o esterne (\textbf{black box} in esecuzione):
+\begin{enumerate}
+    \item \textbf{\textcolor{brown}{Idoneità di funzionalità:}} la capacità del software di rispondere a certe esigenze in condizioni specifiche.
+    \item \textbf{\textcolor{brown}{Efficienza di performance:}} il numero di risorse utilizzate sotto certe condizioni.
+    \item \textbf{\textcolor{brown}{Compatibilità:}} il grado in cui due componenti comunicano dati tra di loro condividendo lo stesso hardware e software.
+    \item \textbf{\textcolor{brown}{Usabilità:}} il grado di un sistema di raggiungere obiettivi di efficienza e soddisfazione utente in contesti reali.
+    \item \textbf{\textcolor{brown}{Affidabilità:}} per quanto un sistema riesce a svolgere correttamente la sua funzione.
+    \item \textbf{\textcolor{brown}{Sicurezza:}} la capacità di un sistema di proteggere le informazioni tramite livelli autorizzazione.
+    \item \textbf{\textcolor{brown}{Manutenibilità:}} il grado di efficienza con il quale il prodotto può essere modificato.
+    \item \textbf{\textcolor{brown}{Portabilità:}} l'efficacia con cui un sistema/componente può essere trasportato da un hw/sw a un altro.
+\end{enumerate}
+
+\section{Modello di Qualità d'Uso}
+Composto da \textbf{5} caratteristiche, definita quando viene testato in particolari contesti \textbf{reali} di utilizzo.
+\begin{enumerate}
+    \item \textbf{\textcolor{brown}{Efficacia:}} accuratezza e completezza con cui un'utente riesce a raggiungere certi obiettivi.
+    \item \textbf{\textcolor{brown}{Efficienza:}} risorse utilizzate in relazione all'efficacia con cui l'utente raggiunge gli scopi preposti.
+    \item \textbf{\textcolor{brown}{Soddisfazione:}} il grado di soddisfazione dei bisogni dell'utente in uno specifico contesto di utilizzo.
+    \item \textbf{\textcolor{brown}{Libertà dai rischi:}} il grado con cui un prodotto mitiga i rischi potenziali alla salute e sicurezza, all'ambiente o ancora quelli economici e finanziari.
+    \item \textbf{\textcolor{brown}{Copertura di contesto:}} la capacità di soddisfare tutti questi requisiti in modo coeso e anche in contesti non legati a quello analizzato.
+\end{enumerate}
+
+\section{Debugging}
+Processo molto iterativo per \textbf{localizzare} e \textbf{sistemare} gli \textbf{errori} nel codice, trovati tramite testing, che può suddividersi in \textbf{4} fasi:
+\begin{enumerate}
+    \item \textbf{\textcolor{brown}{Stabilizzazione:}} si tratta di riprodurre l'errore in un ambiente controllato per capire le condizioni di fallimento e formulare dei test case.
+    \item \textbf{\textcolor{brown}{Localizzazione:}} identificare le parti del codice che producono l'errore analizzando log, tracce stack, variabili e tendenzialmente è la fase più lunga.
+    \item \textbf{\textcolor{brown}{Correzione:}} il codice viene modificato nel luogo designato per risolvere l'errore, ma bisogna capirlo appieno per non introdurre nuovi difetti.
+    \item \textbf{\textcolor{brown}{Verifica:}} si tratta di assicurarsi che l'errore sia sistemato senza averne creati altri (\textbf{regression test}) utilizzando i vecchi testi.
+\end{enumerate}
+Gli errori \textbf{sintattici} sono quando il programma viola le regole grammaticali del linguaggio, quelli \textbf{logici} sono quando produce risultati inaspettati o sbagliati.
+
+\section{Assertion and Defensive Programming}
+\begin{boxDef}
+Si parla di \textbf{\textcolor{blue}{asserzioni}} quando voglio utilizzare delle precondizioni e postcondizioni per verificare che il programma esegua correttamente, altrimenti sollevo un AssertionError. La sintassi è \textbf{\textit{assert Expr : Expr}}, dove la prima espressione è una condizione booleana, la seconda un messaggio se c'è l'errore. 
+\begin{itemize}
+    \item \textbf{Internal Invariants:} sono asserzioni utilizzate come controlli negli else o nei casi di default verificare che non ci siano condizioni impreviste.
+    \item \textbf{Control-Flow Invariants:} vengono usate per indirizzare il flusso del programma in modo che non raggiunga casi vietati, utilizzando assert false
+    \item \textbf{Precondizioni, Postcondizioni, Class Invariants:} per verificare prima o dopo l'esecuzione di qualcosa per evitare che succedano cose spiacevoli.
+    \item \textbf{Loop Invariants:} asserzioni che verificano condizioni importanti per la giusta esecuzione del ciclo o del codice che viene dopo di esso.
+\end{itemize}
+Si parla di \textbf{\textcolor{blue}{programmazione difensiva}} quando un programmatore è conscio del fatto che ci saranno dei \textbf{bug} per cui cerca di impedire il fallimento.
+\end{boxDef}
+
+\section{Ottimizzazione delle Performance}
+Spesso riduce la \textbf{leggibilità} e la \textbf{manutenibilità}, che sono la priorità tranne nei sistemi real time.
+Prima di modificare una funzione per ottimizzarla è bene verificarne i benefici, inoltre \textbf{modularizzare} il codice in modo da ottimizzare piccole porzioni.
+
+\begin{boxDef}
+\textbf{\textcolor{brown}{REFACTORING}} quando vado a modificare la struttura interna del codice senza modificarne il comportamento esterno. \\
+Sintomo della necessità di un refactoring è codice \textbf{duplicato}, metodi e classi \textbf{lunghe}, switch, \textbf{dipendenza} eccessiva, \textbf{violazione} dell'incapsulamento.
+Tra le tecniche di refactoring abbiamo l'estrazione di una classe o di un metodo da un blocco di codice, cambiare l'algoritmo, spostare un metodo.
+\end{boxDef}
+
+\section{Software Manutenibile}
+Tra le linee guida, scelte subito, conviene scrivere unità di codice \textbf{semplici} e \textbf{brevi}, \textbf{non duplicate}, che dipendono da \textbf{interfacce} concise e divise in \textbf{moduli}. I componenti di alto livello devono essere disaccoppiati, l'architettura dev'essere bilanciata e breve, con test e pipeline di sviluppo automatizzate:
+\begin{itemize}
+    \item \textbf{Scrivere unità di codice brevi:} evitare di scrivere più di quindici linee perché è facile creare dei \textbf{test} \textbf{SRP}, semplici ed isolati ma anche da analizzare. Sono anche più facili da riutilizzare per ridurre la \textbf{duplicazione}.
+    \begin{itemize}
+        \item Per evitare di avere funzioni estratte con una lista di parametri infiniti si preferisce inserire tutto in una \textbf{classe} con degli \textbf{attributi}.
+    \end{itemize}
+    \item \textbf{Scrivere unità di codice semplice:} mantenere meno di quattro branch per unità per evitare manutenibilità, testabilità, modularità e predittività. Considerare McCabe per limitarne la complessità, dato che il numero di test esaustivi è il numero di branch aumentato di uno.
+    \begin{itemize}
+        \item Per evitare catene di \textbf{if else} si rimpiazzano i \textbf{branch condizionali} con il \textbf{polimorfismo} o si sostituiscono condizioni innestate con \textbf{guard clause}.
+    \end{itemize}
+    \item \textbf{Scrive il codice una sola volta:} per evitare di copiare errori o doverli poi correggere in mille posti, magari dimenticandomeli e ritrovandoli dopo.
+    \begin{itemize}
+        \item Per evitare di copia incollare con piccole variazioni estraggo le parti comuni, le sposto in una superclasse usando \textbf{SRP} e così posso evolverle.
+    \end{itemize}
+    \item \textbf{Mantenere le interfacce brevi:} limitare il numero di parametri passati a massimo quattro, usando piuttosto degli oggetti \textbf{\textcolor{blue}{DTO}} che li riuniscono.
+    \begin{itemize}
+        \item Per evitare troppi parametri utilizzo il design pattern \textbf{Parameter Object} creando un \textbf{DTO} o più di una classe per raggruppare dati correlati.
+    \end{itemize}
+    \item \textbf{Separare gli affari in moduli:} evitare moduli enormi, nascondendo l'implementazione con \textbf{interfacce} per migliorare il \textbf{disaccoppiamento} e la \textbf{leggibilità}.
+    \begin{itemize}
+        \item Per evitare di riempire di interfacce, controllo che venga implementata almeno due volte e prima cerco se esiste la funzione nella std library.
+    \end{itemize}
+    \item \textbf{Ridurre l'accoppiamento componenti:} si deve esporre all'esterno un'\textbf{interfaccia} con i metodi strettamente \textbf{necessari} soprattutto nei \textbf{top level}.
+    \begin{itemize}
+        \item Per evitare l'accoppiamento bisogna \textbf{astrarre} bene, limitare la conoscenza interna, evitare codice di passaggio tra un componente e l'altro.
+    \end{itemize}
+    \item \textbf{Mantenere bilanciata l'architettura:} bilanciare il numero e la dimensione dei componenti top level, mantenendolo tra sei e dodici, ognuno con \textbf{SRP}.
+    \begin{itemize}
+        \item Organizzare i componenti per \textbf{dominio funzionale} e quindi ragionare sulla funzione che hanno per l'utente finale oppure per \textbf{specializzazione tecnica} cioè su come il sistema è creato per dividere le responsabilità ma difficile la comunicazione tra essi.
+    \end{itemize}
+    \item \textbf{Minimizzare la dimensione dei sorgenti:} una \textbf{codebase} deve essere piccola. Un sistema può avere più codebase, ad esempio una \textbf{centrale} e più \textbf{plugin}, ma se sono lunghi aumento la densità d'errore ed il rischio di fallimento.
+    \begin{itemize}
+        \item Per raggiungere l'obiettivo non devo duplicare codice, devo fare il \textbf{refactoring} di quello esistente, usare librerie terze e dividere il sistema.
+    \end{itemize}
+    \item \textbf{Automatizzare i test:} tramite un buon \textbf{framework} apposito riesco ad incentivare il \textbf{refactoring} e introdurre un \textbf{testing} continuo nello sviluppo. Questo permette la ripetibilità dei test, rende efficiente lo sviluppo e il codice predicibile, fornisce documentazione del codice testato automatica.
+    \begin{itemize}
+        \item Posso distinguere i test in \textbf{black box} e \textbf{white box}, come discusso successivamente e sono i modi per raggiungere questo obiettivo.
+    \end{itemize}
+    \item \textbf{Scrivere codice pulito:} si tratta di evitare di lasciare brutti commenti, codice commentato o morto, numeri hardcoded, eccezioni non gestite.
+\end{itemize}

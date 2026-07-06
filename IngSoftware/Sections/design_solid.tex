@@ -1,0 +1,66 @@
+\chapter{Design SOLID}
+\section{Archittetura e Design}
+Ogni software rappresenta due valori principali per l'investitore:
+\begin{itemize}
+    \item \textbf{\textcolor{brown}{Comportamento}}, cioè le funzioni principali che svolge.
+    \item \textbf{\textcolor{brown}{Struttura}}, cioè un programma facilmente modificabile, perché verrà modificato se è utilizzato.
+\end{itemize}
+
+Una volta che i requisiti sono chiari, si trasformano in \textbf{design} che ne definisce i componenti e le loro interazioni ed è diviso in due fasi:
+\begin{enumerate}
+    \item \textbf{FASE ARCHITETTURALE:} visione di alto livello, proprietà esterne e relazioni, dettate dai requisiti funzionali e non.
+    \item \textbf{FASE DETTAGLIO DESIGN:} decomposizione dei componenti in dettagli, dall'architettura ed i requisiti funzionali.
+\end{enumerate}
+
+\section{Principi SOLID}
+\begin{itemize}
+    \item \textbf{\textcolor{brown}{Single Responsibility Principle (SRP)}}, la classe deve avere un solo motivo per cambiare:
+    \begin{itemize}
+        \item Deve avere una sola funzionalità, per evitare di creare un malfunzionamento in caso di cambiamento.
+        \item È difficile da implementare perché le classi diventano tante e perché siamo abituati a raggruppare le funzionalità.
+        \item Un modulo è un file sorgente che coinvolge più classi ad alta coesione che rispettano il principio \textbf{SRP}.
+    \end{itemize}
+    \textbf{\textcolor{red}{SOLUZIONE:}} ogni classe deve contenere il codice per la sola funzione che gli spetta ed utilizza il pattern FACADE.
+    \item \textbf{\textcolor{brown}{Open Close Principle (OCP)}}, deve essere possibile estendere il comportamento di una classe senza modificarla:
+    \begin{itemize}
+        \item Ogni modifica su codice già rilasciato è vietata, bisogna creare un nuovo metodo o meglio una nuova classe.
+        \item Migliora la stabilità, manutenzione e riutilizzabilità del codice; aperta per implementazioni, chiusa per modifiche
+        \item Le variabili sono private, non si usano globali. Le frecce piene significano implementazioni, vuote invece relazioni. Se una freccia va dalla classe A alla B, significa che all'interno della classe A viene menzionata e usata la classe B.
+        \item In pratica utilizzo un'interfaccia ed una o più implementazioni con polimorfismo per definire un modulo ad alto livello, protetto.
+    \end{itemize}
+    \textbf{\textcolor{red}{SOLUZIONE:}} l'astrazione creando un interfaccia, i cui oggetti istanziati saranno attributi della classe originaria scelti con i setter.
+    \item \textbf{\textcolor{brown}{Liskov Substitution Principle (LSP):}}, la classi derivate devono essere sostitutive della loro classe base senza problemi:
+    \begin{itemize}
+        \item La validità di un modello dipende dall'utilizzatore, dato che il focus è il comportamento pubblico della classe OOP.
+    \end{itemize}
+    \textbf{\textcolor{red}{SOLUZIONE:}} delegare i metodi alle sottoclassi che ereditano da quella base che contiene le firme delle funzioni.
+    \item \textbf{\textcolor{brown}{Interface Segregation Principle (ISP)}}, creare gerarchie di interfacce, in modo che il client non sia costretto a dipendere da metodi non usati:
+    \begin{itemize}
+        \item Evitare che si utilizzino interfacce troppo ricche di metodi, perché potrebbero essere inutili per molte sottoclassi.
+        \item In caso di modifiche ricompilo solo le interfacce modificate, analogamente riduco le dipendenze alle essenziali
+    \end{itemize}
+    \textbf{\textcolor{red}{SOLUZIONE:}} creo più interfacce legate tra di loro, ognuna che specifica maggiormente la precedente, non una.
+    \item \textbf{\textcolor{brown}{Dependency Inversion Principle (DIP)}}, dipendere da astrazioni (stabili e non modificabili), non da classi specifiche:
+    \begin{itemize}
+        \item Se un modulo di alto livello dipende da uno di basso livello non va bene! (esempio di pizza/pizzeria).
+        \item Deve dipendere da un interfaccia, non da una concretizzazione della stessa.
+        \item \textbf{\textcolor{blue}{Dependency Injection}}, detta anche inversione di controllo, configura le dipendenze dall'esterno non staticamente. Iniettare tramite parametro nel costruttore, tramite un metodo setter esposto o tramite interfaccia con un iniettore.
+    \end{itemize}
+     \textbf{\textcolor{red}{SOLUZIONE:}} introdurre un livello di astrazione tra alto e basso livello, che dipendono da un'interfaccia comune.
+\end{itemize}
+
+\section{Principi di coesione dei componenti}
+I primi due sono inclusivi, mentre il terzo esclusivo e sono tutti essenziali per evitare sbilanciamenti. Un componente è l'unità di codice più piccola che può essere distribuita e compilata indipendentemente, che devono rimanere coesi quando scelgo le classi:
+\begin{itemize}
+    \item \textbf{\textcolor{brown}{Reuse/Release Equivalence (REP):}}rilascio associato ad un numero e comporta la coerenza dei componenti nei pacchetti che vengono distribuiti.
+    \item \textbf{\textcolor{brown}{Common Closure Principle (CCP):}} raccolgo in componenti le classi che possono cambiare per la stessa ragione, analogia con il principio solid \textbf{SRP}.
+    \item \textbf{\textcolor{brown}{Common Reuse Principle (CRP):}} non costringere l'utilizzatore a dipendere da codice di cui non ha bisogno, analogia con \textbf{ISP}.
+\end{itemize}
+
+\section{Principi di accoppiamento dei componenti}
+Ci permettono di gestire le relazioni tra i componenti:
+\begin{itemize}
+    \item \textbf{\textcolor{brown}{Acyclic Dependencies Principle (ADP)}}, impedire cicli nel grafo delle dipendenze perché se si lavora in team si rischia di rompere il lavoro degli altri.
+    \item \textbf{\textcolor{brown}{Stable Dependencies Principle (SDP)}}, si cerca di dipendere nella direzione della stabilità ed è importante capire i componenti stabili e instabili.
+    \item \textbf{\textcolor{brown}{Stable Abstraction Principle (SAP)}}, un componente deve far dipendere il suo livello di astrazione dal suo livello di stabilità.
+\end{itemize}

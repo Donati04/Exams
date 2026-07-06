@@ -1,0 +1,87 @@
+\chapter{Ingegneria del Software}
+Per definizione:
+\begin{itemize}
+    \item È una \textbf{disciplina} dell'ingegneria che riguarda tutti gli aspetti del software dai requisiti fino al mantenimento futuro.
+    \item \textbf{CMU} dice che sia una forma di ingegneria che applica i principi dell'IT per ottenere una soluzione costi-efficace.
+    \item \textbf{IEEE 610} invece la considera un approccio sistematico, disciplinato e quantificabile allo sviluppo e mantenimento.
+\end{itemize}
+Un progetto viene definito un successo che rispetta tre parametri di misurazione:
+\begin{enumerate}
+    \item La consegna è stata effettuata in \textbf{tempo}.
+    \item Il progetto è rientrato nei \textbf{costi} preventivati.
+    \item Ha prodotto un \textbf{output} che ha soddisfatto il cliente.
+\end{enumerate}
+Se uno di questi non è stato rispettato il progetto è \textbf{\textcolor{blue}{challenged}}, se nessuno si dice che ha \textbf{\textcolor{red}{fallito}}.
+Tendenzialmente i progetti hanno successo quando coinvolgono l'utente, hanno richieste chiare e sono pianificati bene.
+Altrimenti falliscono soprattutto per mancanza di input, chiarificazioni delle specifiche o cambiamento in corso d'opera:
+\begin{enumerate}
+    \item Buon \textbf{team di sviluppo}: buone skill, coordinamento, influenza, problem solving e confronto.
+    \item Buona \textbf{pubblicità}: visione chiara del progetto, tempi decisionali ristretti, disponibilità.
+    \item Buoni \textbf{spazi di sviluppo}: coinvolgimento dell'utente, ottimizzazione, esecuzione veloce.
+\end{enumerate}
+
+Gli \textbf{\textcolor{red}{errori}} sono generalmente generati dal codice, ma può capitare che si siano propagati da delle specifiche non chiare. Per ridurre tali \textbf{bug} si preferisce nei progetti ampi utilizzare parti di codice già sviluppati. \\
+
+\[
+\textit{Un ingegnere del software è una costruzione multipersonale di un software multi versione}.
+\]
+
+Eticamente per l'ingegneria del software ci sono \textbf{\textcolor{blue}{8} principi}:
+\begin{enumerate}
+    \item Pubblico interessato.
+    \item Cliente e Datore.
+    \item Prodotto.
+    \item Giudizio sull'integrità integrità del prodotto.
+    \item Gestione del processo etico.
+    \item Professionalità.
+    \item Colleghi.
+    \item Pratica e continua formazione.
+\end{enumerate}
+Tali principi vengono utilizzati per la privacy, la proprietà
+intellettuale, il riuso del codice, la risoluzione dei problemi.
+
+\vspace*{0.02\textheight}
+\textbf{Alan Davis} nel \textbf{1994} ha definito alcune delle regole per sviluppare un software professionale:
+\begin{enumerate}
+    \item Qualità al primo posto, dato che è possibile fare software di qualità.
+    \item Fornire il prodotto al cliente il prima possibile.
+    \item Inquadrare il problema prima di iniziare a segnare le specifiche.
+    \item Valutare eventuali alternative di progettazione.
+    \item Usare un appropriato modello di processo.
+    \item Usare linguaggi differenti per diverse fasi dello sviluppo.
+    \item Mettere le tecniche davanti agli strumenti per applicarle.
+    \item Preferire fare le scelte giuste, rispetto che quelle più veloci.
+    \item Una buona gestione è più importante di una buona tecnologia.
+    \item Le persone sono la chiave del successo, quindi prendersi responsabilità e seguire il progetto con cura.
+\end{enumerate}
+
+\vspace*{0.02\textheight}
+\textbf{Anthony Wasserman} nel \textbf{1996} ha proposto alcuni concetti base per tale disciplina:
+\begin{enumerate}
+    \item \textbf{Astrazione:} una tecnica utilizzata per la progettazione che permette di generalizzare concetti.
+    \item \textbf{Analisi e metodi/notazioni di sviluppo:} standardizzare i requisiti e le notazioni per comunicare universalmente.
+    \item \textbf{Prototipare la UI:} permette di inquadrare le preferenze dell'utente prima di iniziare lo sviluppo.
+    \item \textbf{Modularità e architettura:} permette di aumentare la qualità e la manutenibilità del software.
+    \item \textbf{Riutilizzo:} è una pratica nell'industria software per permettere di allungare la vita del progetto.
+    \item \textbf{Ciclo di vita:} deve essere considerato dall'inizio alla fine.
+    \item \textbf{Metriche di processo:} permette di verificare spesso l'andamento del software.
+    \item \textbf{Strumenti e ambienti integrati:} essenziali per sviluppare software complessi.
+\end{enumerate}
+
+\section{Processi Software}
+Per sviluppare un buon software c'è bisogno di varie \textbf{task} svolte da diverse persone e coordinate da un terzo:
+\begin{itemize}
+    \item \textbf{\textcolor{brown}{CODE N FIX:}} modello più semplice di programmare da solo che una volta soddisfatte le specifiche si fa test e debug.
+    \item \textbf{\textcolor{brown}{WATERFALL:}} modello a cascata che segue gli step principali a cui si aggiunge il mantenimento del software:
+    \begin{itemize}
+        \item L'\textbf{output} del task precedente è l'\textbf{input} del successivo ed è utile per descrivere lo stato attuale del progetto.
+        \item Purtroppo l'interazione con l'utente avviene solo nella fase requisiti ed è \textbf{document-driven} perché ne fa molti.
+    \end{itemize}
+    \item \textbf{\textcolor{brown}{INCREMENTALE:}} ogni feature viene sviluppata separatamente poi unita tramite integrazione e testata:
+    \begin{itemize}
+        \item I vantaggi sono sviluppare per primi i componenti più importanti e contenere il rischio se c'è un problema.
+        \item Può essere utilizzato per sviluppo \textbf{multi-componente}, oppure \textbf{multi-release} tramite varie versioni del prodotto.
+        \item In pratica utilizza il metodo \textbf{Divide and Conquer} ed è precursore della tecnica attuale \textbf{\textcolor{blue}{CI/CD}}.
+    \end{itemize}
+\end{itemize}
+
