@@ -1,0 +1,95 @@
+\documentclass[openany]{book}
+
+% Dimensione pagina e margini
+% 'a4paper' è lo standard EU/UK, altrimenti metti altro
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+
+% Lista package utili generici
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
+\usepackage[italian]{babel}
+\usepackage{color,soul}
+\usepackage{cancel}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{forest}
+\usepackage{tikz-qtree}
+\usepackage[utf8]{inputenc}
+
+% Box per definizioni, c, python e bash
+\usepackage{Style/boxes}
+
+% Titolo indice più grande
+\renewcommand{\contentsname}{\huge{Indice}}
+
+% Le pagine vuote non hanno numero
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
+\hbox{}
+\thispagestyle{empty}
+\newpage
+\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+
+
+%------------------------------------------------
+%	Inizio documento
+%------------------------------------------------
+\begin{document}
+
+%------------------------------------------------
+%	Copertina
+%------------------------------------------------
+\begin{titlepage}
+
+	\raggedleft % Tutto allineato a destra
+	\vspace*{\baselineskip} % Spazio in cima alla pagina
+	
+	%------------------------------------------------
+	%	Autore + Anno Accademico
+	%------------------------------------------------
+    {\large \textbf{Anno Accademico 20xx/20xx}}
+	\\
+    \vspace*{0.05\textheight}
+    {\LARGE \textbf{Leonardo Donati}}
+    \vspace*{0.167\textheight}
+    
+	%------------------------------------------------
+	%	Titolo e sottotitolo
+	%------------------------------------------------
+    % Prima linea del titolo
+	\textbf{\LARGE Appunti}\\[\baselineskip] 
+
+    % Titolo principale
+	{{\Huge \textbf{Materia}}}\\[\baselineskip]
+
+    % Sottotitolo
+	{\Large \textit{Teoria e esercizi.}}
+	\vfill % Spazio fra titolo e footer
+    
+	%------------------------------------------------
+	%  Immagine
+	%------------------------------------------------
+    %{\Large \textbf{Leonardo Donati}}
+	%\\
+    \vspace*{0.05\textheight}
+    \includegraphics[scale=0.20]{Images/Unimore.jpg}
+	%\vspace*{3\baselineskip} % Whitespace at the bottom of the page
+
+\end{titlepage}
+
+%------------------------------------------------
+%	Indice
+%------------------------------------------------
+\newpage
+\centering
+\tableofcontents
+
+%------------------------------------------------
+%	Inizio appunti
+%------------------------------------------------
+\raggedright
+
+
+\end{document}
