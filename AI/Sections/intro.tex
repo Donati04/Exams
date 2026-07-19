@@ -1,0 +1,59 @@
+\chapter{Introduzione}
+
+\section{Ripasso Algebra Lineare}
+\begin{defn}[Spazio vettoriale]
+  Lo \textbf{spazio vettoriale} $\mathbb{R}^n$ è un insieme di elementi $x = [x_1, \cdots, x_n]$ where each $x_i \in \mathbb{R}$.  
+  Gli elementi $x$ sono chiamati \textbf{vettori} e soddisfano queste proprietà:
+  \begin{enumerate}
+    \item \textbf{Addizione:} Se $x \in \mathbb{R}^n$ e $y \in \mathbb{R}^n$, allora $x + y = [x_1+y_1, \cdots, x_n+y_n] \in \mathbb{R}^n$. 
+    \item \textbf{Prodotto scalare:} Se $x \in \mathbb{R}^n$ e $a \in \mathbb{R}$ allora, $a \cdot x = [a\cdot x_1, \cdots, a\cdot x_n]$.
+    \item \textbf{Prodotto interno:} Se $x \in \mathbb{R}^n$ e $y \in \mathbb{R}^n$ allora, $x \cdot y = \sum^n_{i=1}{x_i \cdot y_i}$.
+  \end{enumerate}
+\end{defn}
+
+\begin{defn}[Matrice]
+  Una \textbf{matrice} $\text{X} \in \mathbb{R}^{n \times m}$ è un vettore rettangolare di elementi $x_{ij} \in \mathbb{R}$, $1 \le i \le n$, $1 \le j \le m$:
+
+  \[\mathbf{X} = \begin{pmatrix}
+    x_{11} & x_{12} & \cdots & x_{1m} \\
+    x_{21} & x_{22} & \cdots & x_{2m} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    x_{n1} & x_{n2} & \cdots & x_{nm}
+  \end{pmatrix}\]
+
+  Deve supportare queste operazioni:
+  \begin{enumerate}
+    \item \textbf{Addizione}: Se $\text{X} \in \mathbb{R}^{n \times m}$, $\text{Y} \in \mathbb{R}^{n \times m}$ e $\text{Z} = \text{X} + \text{Y}$, allora $\text{Z} \in \mathbb{R}^{n \times m}$ e $Z_{ij} = X_{ij} + Y_{ij}$.
+    \item \textbf{Prodotto scalare}: Se $\text{X} \in \mathbb{R}^{n \times m}$, $a \in \mathbb{R}$ e $\text{Z} = a \cdot \text{X}$, allora $\text{Z} \in \mathbb{R}^{n \times m}$ e $Z_{ij} = a \cdot X_{ij}$.
+    \item \textbf{Prodotto fra matrici}: Se $\text{X} \in \mathbb{R}^{n \times m}$, $\text{Y} \in \mathbb{R}^{m \times n}$ e $\text{Z} = \text{X} \cdot \text{Y}$, allora $\text{Z} \in \mathbb{R}^{n \times n}$ e $Z_{ij} = \sum_{k=1}^{m} X_{ik} \cdot Y_{kj}$.
+  \end{enumerate}
+\end{defn}
+
+\section{Ripasso Statistica}
+\begin{defn}[Distribuzione di Probabilità]
+  Una distribuzione di probabilità $P$ su uno spazio campionario $\Omega$ è un'applicazione dai sottoinsiemi di $\Omega$ ai numeri reali che soddisfa le seguenti condizioni:
+  \begin{itemize}
+    \item \textbf{Non-negatività:} $P(\alpha) \ge 0$, $\forall \alpha \subseteq \Omega$.
+    \item \textbf{Normalizzazione:} $P(\Omega) = 1$.
+    \item \textbf{Additività:} $\forall \alpha, \beta \subseteq \mathbb{R}$ che sono insiemi disgiunti, $P(\alpha \cup \beta) = P(\alpha) + P(\beta)$.
+  \end{itemize}
+\end{defn}
+
+
+\section{Machine Learning}
+\begin{defn}[Machine Learning]
+Il \textbf{machine learning} è un campo di studio
+che conferisce ai computer la capacità di apprendere senza essere
+esplicitamente programmati.
+\end{defn}
+
+Esistono due tipi di approcci:
+\begin{enumerate}
+  \item \textbf{Non parametrico:} l'apprendimento avviene memorizzando i dati di addestramento (memorizzazione).
+  \item \textbf{Parametrico:} l'apprendimento avviene utilizzando un algoritmo per adattare i parametri di un modello matematico o statistico sulla base di dati di addestramento. Per esempio:
+    \[
+    f_{\theta}(x) = \sum^D_{d=1}{\theta_d x_d}
+    \]
+\end{enumerate}
+
+
