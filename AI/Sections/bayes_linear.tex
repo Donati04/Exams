@@ -22,8 +22,8 @@ Date questi definizioni ed elementi, si possono definire anche due valori:
 \]
 Dove:
 \begin{itemize}
-  \item \textbf{Funzione di likelyhood:} $P(Y = c) = \pi_{c'}$ definisce la probabilità, che pescando a caso da un dataset $D$, ottengo una classe $c$.
-  \item \textbf{Funzione di probabilità a priori: }$P(X = x \mid Y = c) = \phi_{c'}(x)$ definisce la probabilità, che nel dataset delle classi $c$, pescando un $x_i$ a caso, ottengo $x$. 
+  \item \textbf{Funzione di probabilità a priori:} $P(Y = c) = \pi_{c}$ definisce la probabilità, che pescando a caso da un dataset $D$, ottengo una classe $c$.
+  \item \textbf{Funzione di likelihood: }$P(X = x \mid Y = c) = \phi_{c}(x)$ definisce la probabilità, che nel dataset delle classi $c$, pescando un $x_i$ a caso, ottengo $x$. 
 \end{itemize}
 
 \subsection{Maximum Likelyhood}
@@ -40,7 +40,7 @@ Dato un dataset etichettato $D = (x_i, y_i)_{i=1}^{N}$ con $k$ classi $c_i \mid 
 \begin{ex}[Approccio]
   \begin{itemize}
     \item $P(x \mid c_i)$, trovare una funzione di probabilità $p$, per ogni classe $c_i$.
-    \item $\hat{c} = argmax_c P(\hat{x} \mid c_i)$ dato un $\hat{x}$ esterno dal dataset $D$, trovare la classe $c_i$, per cui si ha la probabilità maggiore. 
+    \item $\hat{c} = argmax_c P(c \mid \hat{x})$ dato un $\hat{x}$ esterno dal dataset $D$, trovare la classe $c$, per cui si ha la probabilità maggiore. 
   \end{itemize}
 \end{ex}
 
