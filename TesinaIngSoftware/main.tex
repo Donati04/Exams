@@ -1,0 +1,116 @@
+\documentclass[11pt,a4paper]{article}
+
+% Dimensione pagina e margini
+% 'a4paper' è lo standard EU/UK, altrimenti metti altro
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+
+% Lista package utili generici
+\usepackage{abstract}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
+\usepackage[italian]{babel}
+\usepackage{color,soul}
+\usepackage{cancel}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{forest}
+\usepackage{tikz-qtree}
+\usepackage[utf8]{inputenc}
+
+% Box per definizioni, c, python e bash
+\usepackage{Style/code_boxes}
+
+% Box per matemarica
+\usepackage{Style/math_boxes}
+
+
+% Titolo indice e abstract più grande
+\renewcommand{\contentsname}{\Huge{Indice}}
+\renewcommand{\abstractnamefont}{\normalfont\LARGE\bfseries}
+
+
+% Le pagine vuote non hanno numero
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
+\hbox{}
+\thispagestyle{empty}
+\newpage
+\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+
+
+%------------------------------------------------
+%	Inizio documento
+%------------------------------------------------
+\begin{document}
+
+%------------------------------------------------
+%	Copertina
+%------------------------------------------------
+\begin{titlepage}
+
+	\raggedleft % Tutto allineato a destra
+	\vspace*{\baselineskip} % Spazio in cima alla pagina
+	
+	%------------------------------------------------
+	%	Autore + Anno Accademico
+	%------------------------------------------------
+    {\large \textbf{Anno Accademico 2025/2026}}
+	\\
+    \vspace*{0.05\textheight}
+    {\LARGE \textbf{Leonardo Donati}}
+    \vspace*{0.167\textheight}
+    
+	%------------------------------------------------
+	%	Titolo e sottotitolo
+	%------------------------------------------------
+    % Prima linea del titolo
+	\textbf{\LARGE Ingegneria del Software}\\[\baselineskip] 
+
+    % Titolo principale
+	{{\Huge \textbf{Reverse Proxy HTTP}}}\\[\baselineskip]
+
+    % Sottotitolo
+	{\Large \textit{Tesina.}}
+	\vfill % Spazio fra titolo e footer
+    
+	%------------------------------------------------
+	%  Immagine
+	%------------------------------------------------
+    %{\Large \textbf{Leonardo Donati}}
+	%\\
+    \vspace*{0.05\textheight}
+    \includegraphics[scale=0.20]{Images/Unimore.jpg}
+	%\vspace*{3\baselineskip} % Whitespace at the bottom of the page
+
+\end{titlepage}
+
+%------------------------------------------------
+% Abstract
+%------------------------------------------------
+\centering
+
+\newpage
+\begin{abstract}
+\raggedright
+Questo elaborato descrive la progettazione di un reverse proxy HTTP realizzato in Java, in grado di leggere le regole di instradamento da un \textit{file di configurazione esterno}
+e di inoltrare ogni richiesta al servizio corretto sulla base del percorso richiesto. Oltre alla funzionalità di base di instradamento, il sistema è stato progettato per 
+supportare più istanze dello stesso servizio a una singola rotta, introducendo la necessità di un meccanismo di \textit{bilanciamento del carico.}
+\end{abstract}
+
+
+%------------------------------------------------
+%	Indice
+%------------------------------------------------
+\newpage
+\centering
+\tableofcontents
+
+%------------------------------------------------
+%	Inizio appunti
+%------------------------------------------------
+\raggedright
+
+\end{document}
