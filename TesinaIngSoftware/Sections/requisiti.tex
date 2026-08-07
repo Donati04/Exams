@@ -1,0 +1,25 @@
+\section{Analisi dei Requisiti}
+\label{sec:requisiti}
+
+\subsection{Requisiti Funzionali}
+\begin{itemize}
+    \item \textbf{Routing delle Richieste HTTP:} il sistema deve ricevere una richiesta HTTP dal client e instradarla verso il servizio backend corretto,
+      sulla base del percorso richiesto e delle regole definite in un file di configurazione esterno.
+    \item \textbf{Load Balancing:} quando una rotta è associata a più istanze dello stesso servizio, il sistema deve distribuire
+      le richieste tra le istanze disponibili secondo una strategia configurabile (ad esempio round-robin, selezione casuale, ecc), senza dover modificare il codice sorgente per cambiarla.
+    \item \textbf{Risoluzione tramite Referer:} per le richieste di risorse statiche (stili css, script, immagini) prive di una ruote esplicita,
+      deve essere necessario risalire al servizio di destinazione analizzando l'header \texttt{Referer} della richiesta, così da individuare la pagina che le ha originate.
+    \item \textbf{Configurazione Dichiarativa delle Route:} deve essere possibile definire, tramite un file YAML esterno,
+      l'insieme delle route disponibili e i servizi backend ad esse associati, senza dover ricompilare l'applicazione.
+    \item \textbf{Gestione di Connessioni Concorrenti:} il sistema deve poter gestire più richieste client in maniera concorrente, ciascuna elaborata su un thread dedicato prelevato da un pool.
+\end{itemize}
+
+\subsection{Requisiti Non Funzionali}
+\begin{itemize}
+    \item \textbf{Basso Overhead:} il tempo impiegato dal proxy per instradare una richiesta deve essere trascurabile rispetto al tempo di risposta del servizio backend.
+    \item \textbf{Estendibilità delle Strategie di Bilanciamento:} deve essere possibile introdurre nuovi algoritmi di balancing del carico con il minor impatto possibile sulle classi esistenti.
+    \item \textbf{Scalabilità della Configurazione:} l'aggiunta di nuovi servizi, istanze o route deve richiedere la sola modifica del file di configurazione.
+    \item \textbf{Robustezza:} un errore nella comunicazione con un singolo backend o l'assenza di una route corrispondente,
+      non deve compromettere la disponibilità del proxy per le altre richieste in corso.
+    \item \textbf{Portabilità:} il software deve poter essere eseguito su qualsiasi piattaforma con una Java Virtual Machine, senza dipendenze dal sistema operativo sottostante.
+\end{itemize}

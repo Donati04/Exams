@@ -1,0 +1,52 @@
+\newpage
+\section{Stile Architetturale}
+\label{sec:architettura}
+Il reverse proxy è distribuito come un singolo processo Java, eseguito come un'unica unità deployabile.
+Non è un sistema distribuito, perché la logica applicativa, dall'accettazione delle connessioni fino all'inoltro della risposta, risiede all'interno della JVM.
+Per questo motivo, lo stile architetturale adottato è quello del \textbf{Monolite a Livelli}, in cui le responsabilità del sistema sono suddivise in livelli logici ben distinti,
+ciascuno dei quali dipende solo dai livelli sottostanti attraverso interfacce astratte.
+
+\subsection{Perché non uno Stile Event-Driven}
+I reverse proxy utilizzati a livello enterprise sono tipicamente realizzati con un'architettura \textbf{Event-Driven},
+basata su eventi e I/O non bloccante, capace di gestire un numero molto elevato di connessioni concorrenti.
+Ho comunque scelto di adottare il Monolite a Livelli per questo progetto, perchè questa strttura è più facile da progettare, testare e descrivere rispetto a una asincrona a eventi.
+Inoltre, con il numero di richieste concorrenti di questo prototipo, un thread per connessione è la soluzione migliore, perchè i benefici di scalabilità di uno stile event-driven diventano 
+determinanti solo con carichi molto più elevati.
+L'utilizzo di un modello event-driven, con I/O non bloccante, può comunque essere un possibile sviluppo futuro del porgetto.
+
+\subsection{I Livelli del Sistema}
+\begin{itemize}
+    \item \textbf{Livello di Connessione:} accetta le connessioni TCP in ingresso tramite il \texttt{ServerSocket} principale e delega la gestione di ciascuna connessione a un thread worker prelevato da un pool.
+    \item \textbf{Livello di Parsing:} responsabile dell'analisi dello stream raw di byte proveniente dal socket del client, traducendo l'header HTTP in un oggetto che contiene metodo, URL e altri header in maniera strutturata.
+    \item \textbf{Livello di Logica di Routing e Balancing:} incapsula la logica applicativa principale. In base alla route del percorso, seleziona il servizio nel backend corretto, usando la strategia di balancing dichiarata.
+    \item \textbf{Livello di Configurazione:} gestisce le regole di instradamento caricate dal file YAML esterno, fornendo un'interfaccia agli altri livelli del sistema.
+\end{itemize}
+
+\subsection{Linguaggio}
+Il linguaggio utilizzato è Java. La scelta è motivata dalla disponibilità di API per la gestione di socket e connessioni TCP, da un modello di concorrenza basato su
+thread semplice da utilizzare tramite un \texttt{ExecutorService} e dall'esistenza di librerie per il parsing dei file di configurazione, come SnakeYAML per i file YAML. \\
+Trattandosi di un programma che introduce un ulteriore passaggio tra client e servizio, l'overhead introdotto dalla JVM rispetto a linguaggi più performanti
+come C/C++ risulta pienamente accettabile.
+
+\subsection{Configurazione Dichiarativa delle Route}
+La scelta di inserire le regole di instradamento in un file YAML esterno, caricato all'avvio dell'applicazione,
+evita che l'aggiunta o la rimozione di un servizio richieda una modifica del codice sorgente.
+
+\begin{yaml}[Esempio di File di Configurazione]
+strategy: round-robin
+routes:
+  - path: /
+    service:
+      - host: localhost
+        port: 8081
+      - host: localhost
+        port: 8082
+  - path: /api
+    service:
+      - host: localhost
+        port: 9090
+\end{yaml}
+
+Per ogni route, viene speficiato il percorso, un host e una porta. Possono esserci più servizi associati a una route, per questo, il campo \texttt{strategy}, 
+permette di scegliere l'algoritmo di load balacing da applicare senza intervenire sul codice.
+

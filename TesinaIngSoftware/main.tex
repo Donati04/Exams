@@ -25,6 +25,8 @@
 % Box per matemarica
 \usepackage{Style/math_boxes}
 
+%Box per esempi di codice
+\usepackage{Style/new_code_boxes}
 
 % Titolo indice e abstract più grande
 \renewcommand{\contentsname}{\Huge{Indice}}
@@ -111,6 +113,11 @@ supportare più istanze dello stesso servizio a una singola rotta, introducendo 
 %------------------------------------------------
 %	Inizio appunti
 %------------------------------------------------
+\newpage
 \raggedright
+\input{Sections/intro.tex}
+\input{Sections/requisiti.tex}
+\input{Sections/stile.tex}
+\input{Sections/uml.tex}
 
 \end{document}
