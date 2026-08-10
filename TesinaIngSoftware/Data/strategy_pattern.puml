@@ -1,0 +1,25 @@
+@startuml
+skinparam classAttributeIconSize 0
+title Strategy Pattern: Bilanciamento del Carico
+
+class Client {
+  +findRoutes(path: String): Service
+}
+
+interface LoadBalancingStrategy {
+  +selectService(services: List<Service>): Service
+}
+
+class RoundRobinStrategy {
+  +selectService(services: List<Service>): Service
+}
+
+class RandomStrategy {
+  +selectService(services: List<Service>): Service
+}
+
+Client -> LoadBalancingStrategy : usa >
+RoundRobinStrategy ..|> LoadBalancingStrategy
+RandomStrategy ..|> LoadBalancingStrategy
+
+@enduml

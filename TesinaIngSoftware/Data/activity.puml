@@ -1,0 +1,34 @@
+@startuml
+title Activity Diagram: Gestione di una Richiesta
+
+|Client|
+start
+:Invia richiesta HTTP;
+
+|Reverse Proxy (thread Client)|
+:Accetta connessione;
+:Esegue parsing della richiesta;
+if (Nessuna Route diretta\ne header Referer presente?) then (si)
+  :Risale al path della pagina\ntramite il Referer;
+else (no)
+endif
+:Cerca la Route corrispondente;
+
+if (Route trovata?) then (si)
+  :Ottiene la LoadBalancingStrategy\ndal ConfigurationManager;
+  :Seleziona il servizio backend\ntramite la strategia;
+
+  |Servizio Backend|
+  :Riceve la richiesta inoltrata;
+  :Elabora e restituisce la risposta;
+
+  |Reverse Proxy (thread Client)|
+  :Inoltra la risposta al client;
+  :Chiude client e socket di servizio;
+  stop
+else (no)
+  :Registra l'errore e chiude\nla connessione con il client;
+  stop
+endif
+
+@enduml

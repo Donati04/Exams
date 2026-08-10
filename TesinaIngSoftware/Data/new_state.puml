@@ -1,0 +1,23 @@
+@startuml
+
+title State Diagram: Ciclo di Vita di una Connessione
+
+[*] --> Accettata : ServerSocket.accept()
+
+Accettata --> InParsing : run()
+InParsing --> InInstradamento : Richiesta letta
+
+InInstradamento --> ConnessaAlBackend : Route trovata e\nservizio selezionato
+InInstradamento --> Fallita : Nessuna route\ncorrispondente
+
+ConnessaAlBackend --> InInoltro : Richiesta inviata\nal backend
+InInoltro --> Chiusa : Risposta inoltrata\ncon successo
+
+ConnessaAlBackend --> Fallita : Errore di I/O o\nconnessione rifiutata
+InInoltro --> Fallita : Errore di I/O
+
+Fallita --> Chiusa : Rilascio risorse\n(blocco finally)
+
+Chiusa --> [*]
+
+@enduml

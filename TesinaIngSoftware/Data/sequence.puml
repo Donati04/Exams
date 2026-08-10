@@ -1,0 +1,46 @@
+@startuml
+title Sequence Diagram: Inoltro di una Richiesta con Bilanciamento del Carico
+autonumber
+
+actor "Client / Browser" as Browser
+participant "Client\n(thread)" as ClientThread
+participant "ConfigurationManager" as CM
+participant "LoadBalancingStrategy" as Strategy
+participant "Servizio Backend" as Backend
+
+Browser -> ClientThread : apre connessione TCP\ne invia richiesta HTTP
+activate ClientThread
+
+ClientThread -> ClientThread : parseRequest() -> HttpRequest
+
+ClientThread -> CM : getRoutes()
+activate CM
+CM --> ClientThread : List<Route>
+deactivate CM
+
+ClientThread -> ClientThread : cerca la Route\ncorrispondente al path
+
+alt Route trovata
+  ClientThread -> CM : getLoadBalancingStrategy()
+  activate CM
+  CM --> ClientThread : strategy
+  deactivate CM
+
+  ClientThread -> Strategy : selectService(services)
+  activate Strategy
+  Strategy --> ClientThread : Service (host, port)
+  deactivate Strategy
+
+  ClientThread -> Backend : apre socket e inoltra\nla richiesta HTTP
+  activate Backend
+  Backend --> ClientThread : risposta HTTP (stream)
+  deactivate Backend
+
+  ClientThread --> Browser : inoltra la risposta (copyData)
+else Nessuna Route trovata
+  ClientThread --> Browser : chiude la connessione
+end
+
+deactivate ClientThread
+
+@enduml

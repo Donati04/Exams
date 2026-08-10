@@ -1,0 +1,25 @@
+@startuml
+skinparam classAttributeIconSize 0
+title Factory Method Pattern: Creazione della Strategia
+
+class "ConfigurationManager" as CM {
+  -loadBalancingStrategy: LoadBalancingStrategy
+}
+
+class LoadBalancingStrategyFactory {
+  +{static} create(type: String): LoadBalancingStrategy
+}
+
+interface LoadBalancingStrategy {
+  +selectService(services: List<Service>): Service
+}
+
+class RoundRobinStrategy
+class RandomStrategy
+
+CM ..> LoadBalancingStrategyFactory : usa >
+LoadBalancingStrategyFactory ..> LoadBalancingStrategy : <<create>>
+RoundRobinStrategy ..|> LoadBalancingStrategy
+RandomStrategy ..|> LoadBalancingStrategy
+
+@enduml

@@ -1,0 +1,26 @@
+\section{Conclusioni e Sviluppi Futuri}
+\label{sec:conclusioni}
+
+\subsection{Sintesi dei Risultati}
+
+Il lavoro svolto ha portato alla progettazione di un reverse proxy HTTP capace di instradare le richieste verso i servizi backend corretti 
+sulla base di un file di configurazione dichiarativo.\\
+
+\begin{itemize}
+    \item L'uso dello \textbf{Strategy Pattern} ha reso il sistema flessibile, permettendo di cambiare l'algortimo di load balancing agendo esclusivamente sul file di configurazione.
+    \item L'uso del \textbf{Singleton Pattern} ha garantito un punto di accesso unico alla configurazione condivisa tra i thread concorrenti.
+    \item L'uso del \textbf{Factory Method Pattern} ha isolato la logica di creazione delle strategie di balacing, semplificando l'introduzione di nuovi algoritmi in futuro.
+\end{itemize}
+
+\subsection{Sviluppi Futuri}
+
+Nonostante il sistema attuale rappresenti una base solida e volutamente semplice, sono possibili diverse estensioni:
+
+\begin{enumerate}
+    \item \textbf{Utilizzo di I/O Non Bloccante:} sostituire il modello a thread-per-connessione basato su Java NIO, così da avvicinare il sistema allo stile Event-Driven usato dai reverse proxy enterpise.
+    \item \textbf{Health-check dei Servizi Backend:} introdurre un controllo periodico dello stato delle istanze configurate, così da escludere automaticamente dal pool utilizzato dalla \texttt{LoadBalancingStrategy} i servizi non raggiungibili.
+    \item \textbf{Connessioni Persistenti:} supportare le connessioni HTTP keep-alive, oggi non gestite poiché ogni connessione viene chiusa dopo l'inoltro di una singola richiesta.
+    \item \textbf{Funzionalità per Prestazioni Migliori:} l'introduzione di un ulteriore livello al proxy permetterebbe di aggiungere funzionalità come il caching delle risposte o il rate limiting, senza modificare la logica di inoltro esistente.
+    \item \textbf{Sicurezza:} aggiungere il supporto a connessioni TLS/HTTPS in ingresso.
+    \item \textbf{Monitoraggio:} introdurre un sistema di logging strutturato e metriche per facilitare il monitoraggio del sistema in un contesto di produzione.
+\end{enumerate}

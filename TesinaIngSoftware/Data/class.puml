@@ -1,0 +1,102 @@
+@startuml
+' --- Impostazioni di Layout ---
+skinparam linetype ortho
+skinparam nodesep 80
+skinparam ranksep 90
+skinparam classAttributeIconSize 0
+
+title Class Diagram Generale
+
+' --- Definizione delle Classi ---
+class Main
+
+class ReverseProxy {
+  -proxySocket: ServerSocket
+  -executor: ExecutorService
+  +ReverseProxy(port: int)
+  -listenForConnections(): void
+}
+
+class Client {
+  -clientSocket: Socket
+  -serviceSocket: Socket
+  -targetService: Service
+  +Client(clientSocket: Socket)
+  -copyData(InputStream in, OutputStream out)
+  +parseRequest(in: InputStream): HttpRequest
+  +findRoutes(path: String): Service
+  +run(): void
+}
+
+class HttpRequest {
+  -firstLine: String
+  -metadataLines: List<String>
+  +getMethod(): String
+  +getUrl(): String
+  +getUrlFromReferer(referer: String): String
+}
+
+class "ConfigurationManager" as CM <<Singleton>> {
+  -instance: ConfigurationManager
+  -config: Config
+  -loadBalancingStrategy: LoadBalancingStrategy
+  -ConfigurationManager()
+  +{static} getInstance(): ConfigurationManager
+  +getRoutes(): List<Route>
+  +getLoadBalancingStrategy(): LoadBalancingStrategy
+}
+
+class Config {
+  -strategy: String
+  -routes: List<Route>
+}
+
+class Route {
+  -path: String
+  -service: List<Service>
+}
+
+class Service {
+  -host: String
+  -port: int
+}
+
+interface LoadBalancingStrategy {
+  +selectService(services: List<Service>): Service
+}
+
+class LoadBalancingStrategyFactory {
+  +{static} create(type: String): LoadBalancingStrategy
+}
+
+class RandomStrategy {
+  -random: Random
+  +selectService(services: List<Service>): Service
+}
+
+class RoundRobinStrategy {
+  -counter: AtomicInteger
+  +selectService(services: List<Service>): Service
+}
+
+' --- Relazioni ---
+Main ..> ReverseProxy : crea >
+ReverseProxy "1" o-- "0..*" Client : avvia >
+ReverseProxy ..> CM : inizializza >
+
+Client ..> HttpRequest : crea >
+Client ..> CM : usa >
+Client ..> LoadBalancingStrategy : usa >
+
+CM "1" *-- "1" Config
+CM o-- "1" LoadBalancingStrategy : detiene >
+CM ..> LoadBalancingStrategyFactory : usa >
+
+LoadBalancingStrategyFactory ..> LoadBalancingStrategy : <<create>>
+RoundRobinStrategy ..|> LoadBalancingStrategy
+RandomStrategy ..|> LoadBalancingStrategy
+
+Config "1" o-- "1..*" Route
+Route "1" o-- "1..*" Service
+
+@enduml
