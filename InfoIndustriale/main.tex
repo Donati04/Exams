@@ -1,0 +1,122 @@
+\documentclass[openany]{book}
+
+% Dimensione pagina e margini
+% 'a4paper' è lo standard EU/UK, altrimenti metti altro
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+
+% Lista package utili generici
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
+\usepackage[italian]{babel}
+\usepackage{color,soul}
+\usepackage{cancel}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{forest}
+\usepackage{tikz-qtree}
+\usepackage[utf8]{inputenc}
+\usetikzlibrary{automata, positioning, arrows.meta}
+
+% Box per definizioni, c, python e bash
+\usepackage{Style/code_boxes}
+
+% Box per matemarica
+\usepackage{Style/math_boxes}
+
+% Gestione caratteri accentati UTF-8 nei listati (listings)
+\lstset{
+  literate={à}{{\`a}}1 {è}{{\`e}}1 {é}{{\'e}}1 {ì}{{\`i}}1
+           {ò}{{\`o}}1 {ù}{{\`u}}1 {À}{{\`A}}1 {È}{{\`E}}1
+           {É}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+           {°}{{\textdegree}}1 {€}{{\texteuro}}1
+}
+
+
+% Titolo indice più grande
+\renewcommand{\contentsname}{\huge{Indice}}
+
+% Le pagine vuote non hanno numero
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
+\hbox{}
+\thispagestyle{empty}
+\newpage
+\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+
+
+%------------------------------------------------
+%	Inizio documento
+%------------------------------------------------
+\begin{document}
+
+%------------------------------------------------
+%	Copertina
+%------------------------------------------------
+\begin{titlepage}
+
+	\raggedleft % Tutto allineato a destra
+	\vspace*{\baselineskip} % Spazio in cima alla pagina
+	
+	%------------------------------------------------
+	%	Autore + Anno Accademico
+	%------------------------------------------------
+    {\large \textbf{Anno Accademico 2025/2026}}
+	\\
+    \vspace*{0.05\textheight}
+    {\LARGE \textbf{Leonardo Donati}}
+    \vspace*{0.167\textheight}
+    
+	%------------------------------------------------
+	%	Titolo e sottotitolo
+	%------------------------------------------------
+    % Prima linea del titolo
+	\textbf{\LARGE Appunti}\\[\baselineskip] 
+
+    % Titolo principale
+	{{\Huge \textbf{Informatica Industriale}}}\\[\baselineskip]
+
+    % Sottotitolo
+	{\Large \textit{Teoria e esercizi.}}
+	\vfill % Spazio fra titolo e footer
+    
+	%------------------------------------------------
+	%  Immagine
+	%------------------------------------------------
+    %{\Large \textbf{Leonardo Donati}}
+	%\\
+    \vspace*{0.05\textheight}
+    \includegraphics[scale=0.20]{Images/Unimore.jpg}
+	%\vspace*{3\baselineskip} % Whitespace at the bottom of the page
+
+\end{titlepage}
+
+%------------------------------------------------
+%	Indice
+%------------------------------------------------
+\newpage
+\centering
+\tableofcontents
+
+%------------------------------------------------
+%	Inizio appunti
+%------------------------------------------------
+\raggedright
+
+\input{Sections/01_introduzione_corso}
+\input{Sections/02_strutture_st}
+\input{Sections/03_modalita_mutuamente_esclusive}
+\input{Sections/04_formalismi_stati_finiti_1}
+\input{Sections/05_formalismi_stati_finiti_2}
+\input{Sections/06_timer_ton}
+\input{Sections/07_transizioni_autonome}
+\input{Sections/08_stati_temporizzati}
+\input{Sections/09_sicurezza_nozioni_base}
+\input{Sections/10_fault_analysis}
+\input{Sections/11_normative_sicurezza_funzionale}
+\input{Sections/12_funzioni_sicurezza_safe_plc}
+\input{Sections/13_cobots}
+
+\end{document}

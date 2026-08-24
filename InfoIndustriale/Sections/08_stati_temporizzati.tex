@@ -1,0 +1,150 @@
+% ============================================================
+% Capitolo 8 — Stati temporizzati (20260511 Stati temporizzati2.pdf)
+% ============================================================
+\chapter{Stati temporizzati}
+\label{cap:stati-temporizzati}
+
+\section{Introduzione}
+Il timer TON (Capitolo~\ref{cap:timer-ton}) viene utilizzato attraverso il nuovo concetto di \textbf{stato temporizzato}:
+\begin{itemize}
+    \item uno stato temporizzato è tale che il controllo rimane in esso per \textbf{al più un tempo fissato};
+    \item scaduto questo tempo, una \textbf{transizione autonoma} (detta di \textbf{timeout}) porta il controllo verso un altro stato;
+    \item altre transizioni possono portare il controllo fuori dallo stato \textbf{prima} del timeout.
+\end{itemize}
+
+\section{Simbolismo grafico}
+\begin{enumerate}
+    \item Lo stato temporizzato presenta un \textbf{riquadro} che indica il tempo massimo $T$ in cui il controllo rimarrà in esso;
+    \item la transizione di \textbf{timeout} presenta una $T$ e un pallino, indicandone la natura temporale e autonoma.
+\end{enumerate}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=stealth, every node/.style={font=\small}]
+    \node[state, draw, minimum size=1.6cm, label={[anchor=south east, font=\footnotesize, draw, inner sep=1pt]north east:$T$}] (s1) {$S_1$};
+    \node[state, draw, minimum size=1.6cm, right=4.5cm of s1] (s2) {$S_2$};
+
+    \draw[->] (s1) edge[bend left=20] node[above] {$t_1$: timeout ($T$, $\bullet$)} (s2);
+    \draw[->] (s1) edge[bend right=35] node[below] {$t_2$: evento \texttt{ev} (trigger)} (s2);
+\end{tikzpicture}
+\caption{Notazione dello stato temporizzato: se l'evento \texttt{ev} che agisce da trigger giunge prima dello scadere del tempo $T$, verrà intrapresa la transizione $t_2$; altrimenti, allo scadere di $T$, scatterà la transizione autonoma di timeout $t_1$.}
+\label{fig:stato-temporizzato}
+\end{figure}
+
+\section{Esempio: semaforo}
+Un primo esempio di stato temporizzato è la realizzazione del semaforo stradale: la transizione da giallo (\texttt{Y}) a rosso (\texttt{R}) è sempre autonoma, ma ora \emph{sappiamo a che tempo avviene} ($T = 5\,s$):
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+Stati_Sem.Y:
+  timer(IN := TRUE, PT := T#5S );
+  IF timer.Q THEN
+    stato := Stati_Sem.R;
+    timer(IN := FALSE);
+  END_IF
+\end{lstlisting}
+
+\section{Spia lampeggiante}
+Una spia lampeggiante passa dallo stato acceso (\texttt{On}) allo stato spento (\texttt{Off}), ciascuno dei due stati ha una durata predefinita: il comportamento globale è dato da \textbf{due stati temporizzati collegati tra loro}.
+
+\subsection{Implementazione (versione base)}
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+FUNCTION_BLOCK Light
+VAR_OUTPUT
+  stato : Light_St := Light_St.Init;
+END_VAR
+VAR
+  timer : TON;
+END_VAR
+
+CASE stato OF
+  Light_St.Init:
+    stato := Light_St.On;
+
+  Light_St.Off:
+    timer(IN:=TRUE, PT := T#1S);
+    IF timer.Q THEN
+      stato := Light_St.On;
+      timer(IN := FALSE );
+    END_IF
+
+  Light_St.On:
+    timer(IN:=TRUE, PT := T#2S);
+    IF timer.Q THEN
+      stato := Light_St.Off;
+      timer(IN := FALSE );
+    END_IF
+END_CASE
+\end{lstlisting}
+
+\begin{note}[Regole implementative dello stato temporizzato]
+\begin{itemize}
+    \item Uno stato temporizzato \textbf{richiama il timer all'inizio del proprio codice} (ad ogni ciclo di scan);
+    \item la transizione di timeout è attivata dal segnale logico \texttt{Q} del timer: \texttt{IF timer.Q THEN ...};
+    \item \textbf{ogni transizione in uscita} (compresa quella di timeout) \textbf{termina con il reset del timer}: \texttt{timer(IN := FALSE)}.
+\end{itemize}
+\end{note}
+
+\subsection{Versione 2: stop e restart}
+In questa seconda versione la spia lampeggiante può essere \textbf{fermata in ogni momento} con l'evento \texttt{stop} e fatta \textbf{ripartire} con l'evento \texttt{restart}. Ogni stato temporizzato contiene, oltre alla logica di timeout, un \texttt{IF} che verifica l'evento di stop (che consuma l'evento e resetta il timer):
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+FUNCTION_BLOCK Light
+VAR_INPUT
+  stop_ev, restart_ev : BOOL := FALSE;
+END_VAR
+VAR_OUTPUT
+  stato : Light_St := Light_St.Init;
+END_VAR
+VAR
+  timer : TON;
+END_VAR
+
+CASE stato OF
+  Light_St.Init:
+    stato := Light_St.On;
+
+  Light_St.Off:
+    timer(IN:=TRUE, PT := T#2S);
+    IF timer.Q THEN
+      stato := Light_St.On;
+      timer(IN := FALSE );
+    END_IF
+    IF stop_ev THEN
+      stato := Light_St.Stop;
+      stop_ev := FALSE;
+      timer(IN := FALSE);
+    END_IF
+
+  Light_St.On:
+    timer(IN:=TRUE, PT := T#1S);
+    IF timer.Q THEN
+      stato := Light_St.Off;
+      timer(IN := FALSE );
+    END_IF
+    IF stop_ev THEN
+      stato := Light_St.Stop;
+      stop_ev := FALSE;
+      timer(IN := FALSE);
+    END_IF
+
+  Light_St.Stop:
+    IF restart_ev THEN
+      stato := Light_St.On;
+      restart_ev := FALSE;
+    END_IF
+END_CASE
+\end{lstlisting}
+
+\section{Controller semaforico temporizzato}
+\subsection{Direttrici abilitate a tempo}
+Nel controller semaforico visto in precedenza le due direttrici venivano attivate da due eventi trigger. In questa variante le due direttrici \texttt{ns} (nord--sud) ed \texttt{ew} (est--ovest) sono abilitate \textbf{esattamente per un tempo stabilito} (stati temporizzati).
+
+\subsection{Farm Road}
+\begin{defn}[Farm Road]
+Strada secondaria che si immette su una strada principale (\emph{main road}). La farm road rimane abilitata \textbf{a richiesta} (evento \texttt{car}) esattamente per un tempo $T = 30\,s$.
+\end{defn}
+
+\subsection{Farm Road — Extended Time}
+Variante: la farm road rimane abilitata a richiesta (evento \texttt{car}) esattamente per un tempo $T$; \textbf{mentre} la farm road è abilitata, un secondo evento \texttt{car} può \textbf{estendere} il tempo di abilitazione di ulteriori 30 secondi \textbf{ma solo una volta}.
+
+\begin{intuition}[Perché gli stati temporizzati]
+Gli stati temporizzati rendono \emph{esplicito nel modello} il tempo di permanenza in uno stato, integrando il timer TON nel formalismo a stati: il timeout è una transizione autonoma (scatta da sola, senza trigger esterno), mentre le altre transizioni possono anticiparlo. In ST si implementano con il pattern: chiamata del timer in testa allo stato, test di \texttt{timer.Q} per il timeout, reset del timer su ogni uscita, e gestione degli eventi con consumo del segnale.
+\end{intuition}

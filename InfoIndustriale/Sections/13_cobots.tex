@@ -1,0 +1,148 @@
+% ============================================================
+% Capitolo 13 — Robotica collaborativa (Collaborative Robots 2024-25.pdf)
+% ============================================================
+\chapter{Robotica collaborativa}
+\label{cap:cobots}
+
+\section{Cobot: definizione e motivazione}
+\begin{defn}[Cobot — Collaborative Robot]
+A differenza dei robot industriali tradizionali, che operano \textbf{separati} dagli esseri umani per motivi di sicurezza (recinzioni di sicurezza, \emph{safety fences}), i cobot lavorano \textbf{a fianco degli operatori}. Sono progettati per adattarsi in tempo reale alle azioni umane, rendendo la produzione più flessibile ed efficiente.
+\end{defn}
+
+«Aprire le recinzioni» è parte integrante della natura collaborativa del nuovo paradigma robotico: i robot collaborativi richiedono in maniera determinante di porre l'enfasi sulla sicurezza e richiedono standard specifici (\textbf{ISO 10218-1:2011} e specifica tecnica \textbf{ISO/TS 15066}).
+
+\section{Origine dei cobot: problemi ergonomici}
+Negli anni '90, l'\textbf{OSHA} (Occupational Safety and Health Administration) era preoccupata per il modo in cui GM e l'industria manifatturiera gestivano i problemi ergonomici negli stabilimenti:
+\begin{itemize}
+    \item i problemi ergonomici si trasformavano in infortuni sul lavoro e perdita di tempo di lavoro per i dipendenti;
+    \item i problemi colpivano le case automobilistiche in tutti gli Stati Uniti, ma per GM erano più significativi nelle aree di assemblaggio finale;
+    \item esempio: prendere e installare una batteria per auto da 20~kg, una al minuto per otto ore al giorno, 200 giorni all'anno, mette a dura prova la spina dorsale.
+\end{itemize}
+
+La prima risposta fu lo \textbf{Z-Lift Assist} (dispositivo di assistenza al sollevamento verticale). Da qui nacquero le \textbf{macchine a vincoli programmabili}:
+\begin{itemize}
+    \item obiettivo: migliorare l'ergonomia dei lavoratori umani \textbf{senza introdurre nuovi rischi} da parte dei robot stessi;
+    \item robot e persone potevano lavorare in collaborazione, contribuendo ciascuno con ciò che sa fare meglio;
+    \item esempio: il robot sostiene un carico ma non lo muove, e la forza motrice viene dal lavoratore umano;
+    \item questi primi cobot erano chiamati «macchine a vincoli programmabili» perché il robot sosteneva il peso di un oggetto lungo assi o superfici determinate, quindi vincolate.
+\end{itemize}
+
+\section{Spazio di lavoro collaborativo (ISO 15066)}
+Le caratteristiche operative dei sistemi robotici collaborativi sono significativamente diverse da quelle dei sistemi robotici tradizionali: nelle operazioni collaborative gli operatori possono lavorare in prossimità del sistema robotico \textbf{mentre è disponibile l'alimentazione agli attuatori}, e il contatto fisico tra operatore e sistema robotico può avvenire all'interno dello \textbf{spazio di lavoro collaborativo}.
+
+\begin{defn}[Spazio di lavoro collaborativo]
+È lo spazio all'interno dello spazio operativo in cui il sistema robotico e un essere umano possono \textbf{eseguire attività contemporaneamente}.
+\end{defn}
+
+\section{Forme differenti di co-lavoro}
+Le forme di co-lavoro si distinguono per tre caratteristiche: spazio separato o condiviso, co-work simultaneo, contatto fisico:
+\begin{center}
+\begin{tabular}{lccc}
+\textbf{Forma} & \textbf{Spazio condiviso} & \textbf{Co-work simultaneo} & \textbf{Contatto fisico}\\
+\hline
+Coexistence & No & No & No\\
+Sequential Cooperation & Sì & No & No\\
+Parallel Cooperation & Sì & Sì & No\\
+Collaboration & Sì & Sì & Sì\\
+\end{tabular}
+\end{center}
+
+\subsection{Coexistence (spazio separato)}
+Il lavoratore umano svolge un certo compito in una parte \textbf{separata, non sovrapposta} dello spazio di lavoro del robot. Caso banale.
+
+\subsection{Shared Workspace e Sequential Cooperation}
+\textbf{Shared workspace}: il co-worker umano svolge un certo compito in almeno una parte limitata dello spazio di lavoro del robot. Descrive solo una disposizione \textbf{spaziale} dei due agenti, senza condizioni temporali (nessuna coordinazione mutua).
+
+\textbf{Sequential Cooperation}: stato o condizione di sforzi condivisi e azione congiunta \textbf{successiva}; nel manifatturiero si riferisce ad azioni sequenziali per completare un compito comune. Esempio: robot e umano lavorano successivamente sullo stesso pezzo. Mentre l'umano lavora il robot è fermo, e mentre il robot lavora l'umano non è nello spazio condiviso.
+
+\subsection{Simultaneous Co-Work e Parallel Cooperation}
+\textbf{Simultaneous co-work}: l'umano svolge un compito nello spazio condiviso \textbf{mentre il robot si muove} per completare il suo. Robot e umano lavorano separatamente: il contatto fisico non è richiesto e va evitato. Lo spazio in cui il robot si sta muovendo deve essere protetto (\emph{guarded}) contro la violazione da parte del co-worker umano; il contatto fisico è considerato un \textbf{incidente}.
+
+\textbf{Parallel Cooperation}: sforzi condivisi e azione \textbf{simultanea} per completare un compito comune; robot e umano lavorano simultaneamente sullo stesso pezzo nello spazio condiviso, senza contatto fisico previsto o permesso (esplicitamente escluso).
+
+\subsection{Collaboration (contatto fisico)}
+Il co-worker umano lavora \textbf{mano nella mano} con il robot in movimento; il contatto fisico tra i due agenti è possibile e persino \textbf{necessario} per completare il compito comune. Entrambi gli agenti devono necessariamente condividere lo spazio e il co-work simultaneo. La \textbf{collaboration} è la forma più stretta di cooperazione: azioni congiunte simultanee per completare un compito comune.
+
+\section{Operazioni collaborative: i quattro metodi}
+Le operazioni collaborative possono includere uno o più dei seguenti metodi:
+\begin{enumerate}
+    \item Hand Guiding;
+    \item Safety Monitored Stop;
+    \item Speed and Separation Monitoring;
+    \item Power and Force Limiting.
+\end{enumerate}
+
+\subsection{Hand Guiding}
+Caratteristica collaborativa usata per \textbf{insegnare (teaching)} al robot: guidare letteralmente il robot attraverso una sequenza di movimenti necessari a completare un compito, come applicazioni pick-and-place. I cobot usano spesso tecnologia nell'end effector per percepire la propria posizione e leggere le forze applicate agli utensili, permettendo al cobot di \textbf{imparare dall'esempio}. (Esempio classico: hand guiding del robot KUKA.)
+
+\subsection{Safety Monitored Stop}
+Usata in cobot progettati per lavorare \textbf{prevalentemente da soli}, con l'umano che entra raramente nel loro spazio di lavoro. Esempio: se un dipendente deve regolare un pezzo gestito dal cobot o rimuoverlo dal suo spazio, il cobot \textbf{cessa il movimento ma non si spegne completamente}, per riprendere facilmente i compiti quando l'umano se ne va. È l'interpretazione più «lasca» di robot collaborativo: impiega tecnologia avanzata di sensoristica di prossimità per trasformare un robot industriale convenzionale in una forma di cobot.
+
+\subsection{Speed and Separation Monitoring}
+Per applicazioni che richiedono interventi umani più frequenti con cobot più grandi: un \textbf{sistema di visione avanzato} installato nell'ambiente permette al robot di percepire la prossimità umana. Il robot \textbf{rallenta progressivamente} man mano che un umano si avvicina, fermandosi completamente quando gli umani sono troppo vicini. Queste reazioni possono essere programmate a varie distanze tra robot e operatore. Il robot riprende il compito e ri-accelera lentamente man mano che l'operatore si allontana.
+
+\begin{note}[Safety-Rated Space Limiting]
+Limite posto sulla distanza tra l'umano e il raggio di movimento del robot da un sistema \textbf{software- o firmware-based} (certificato per la sicurezza): è il meccanismo alla base di Safety Monitored Stop e Speed and Separation Monitoring.
+\end{note}
+
+\subsection{Power and Force Limiting}
+La tecnologia di sicurezza è spesso quasi completamente basata su funzioni di limitazione di potenza e forza:
+\begin{itemize}
+    \item i robot con forza limitata leggono le forze nei propri giunti (pressione, resistenza, impatti) usando \textbf{sensori integrati}; dopo aver percepito una perturbazione, il robot si \textbf{ferma o inverte} il proprio moto;
+    \item la \textbf{pelle morbida} (meccanismo \emph{passivo}) e i \textbf{tempi di reazione molto rapidi} (\emph{attivo}) dissipano quanto più possibile l'impatto;
+    \item pelli morbide e design più arrotondati aiutano ad ammortizzare gli impatti e persino a eliminare i punti di schiacciamento (\emph{pinch points}).
+\end{itemize}
+
+\begin{defn}[Contatti transienti vs.\ quasi-statici]
+\begin{enumerate}
+    \item Un impatto \textbf{quasi-statico} si verifica quando il robot schiaccia una parte del corpo umano \emph{contro un oggetto fisso};
+    \item un impatto \textbf{transiente} si verifica quando il robot entra in contatto con una parte del corpo umano \emph{senza alcuna restrizione}: la parte del corpo può muoversi liberamente sotto la forza del robot.
+\end{enumerate}
+Regola generale: un impatto transiente può applicare una forza \textbf{due volte superiore} a quella di un impatto quasi-statico. Esempio: se il robot schiaccia la mano contro un tavolo, la forza massima prima di raggiungere la soglia del dolore umano è 135~N; nell'impatto transiente si può arrivare a 270~N prima della soglia del dolore.
+\end{defn}
+
+\section{Misure protettive in robotica collaborativa}
+Se la distanza di separazione tra una parte pericolosa del sistema robotico e un qualsiasi operatore scende sotto la \textbf{distanza di separazione protettiva} (\emph{protective separation distance}), il sistema robotico deve:
+\begin{itemize}
+    \item initiare un \textbf{arresto protettivo} (safety-monitored stop);
+    \item attivare le funzioni di sicurezza collegate al sistema robotico (es.\ spegnere eventuali utensili pericolosi).
+\end{itemize}
+
+Le possibilità con cui il sistema di controllo del robot può evitare di violare la distanza di separazione protettiva includono (ma non si limitano a):
+\begin{itemize}
+    \item \textbf{riduzione della velocità}, eventualmente seguita da una transizione a un safety-rated monitored stop;
+    \item esecuzione di un \textbf{percorso alternativo} che non violi la distanza di separazione protettiva, continuando con speed and separation monitoring attivo.
+\end{itemize}
+Quando la distanza di separazione effettiva raggiunge o supera la distanza di separazione protettiva, il moto del robot può essere ripreso.
+
+\subsection{Mantenimento della distanza di separazione sufficiente}
+Durante il funzionamento automatico, le parti pericolose del sistema robotico non devono mai avvicinarsi all'operatore più della distanza di separazione protettiva. Questa può essere calcolata tenendo conto dei seguenti pericoli associati allo speed and separation monitoring:
+\begin{itemize}
+    \item in situazioni di velocità \textbf{costante}: si usa il valore \emph{worst-case} della velocità monitorata del robot (dipende dall'applicazione);
+    \item in situazioni di velocità \textbf{variabile}: si usano le velocità del sistema robotico e dell'operatore per determinare il valore applicabile della distanza di separazione protettiva a ogni istante.
+\end{itemize}
+
+\subsection{Calcolo della distanza protettiva $S_p$}
+La $S_p$ può essere calcolata in modo \textbf{dinamico} (consentendo alla velocità del robot di variare durante l'applicazione) o \textbf{statico} (valore fisso basato su valori worst-case):
+\begin{key}
+\[ S_p = S_h + S_r + S_s + C + Z_d + Z_r \]
+\end{key}
+dove:
+\begin{itemize}
+    \item $S_h$: variazione di posizione dell'\textbf{operatore} (\emph{operator's change in location});
+    \item $S_r$: spazio dovuto al \textbf{tempo di reazione} del sistema robotico;
+    \item $S_s$: \textbf{distanza di arresto} (\emph{stopping distance}) del sistema robotico;
+    \item $C$: \textbf{distanza di intrusione}: la distanza che una parte del corpo può penetrare nel campo di rilevamento prima di essere rilevata;
+    \item $Z_d$: \textbf{incertezza di posizione dell'operatore} nello spazio collaborativo, così come misurata dal dispositivo di rilevamento presenza (tolleranza di misura del sistema di sensing);
+    \item $Z_r$: \textbf{incertezza di posizione del sistema robotico}, risultante dall'accuratezza del sistema di misura della posizione del robot.
+\end{itemize}
+
+Dettagli sui primi due termini:
+\begin{itemize}
+    \item $S_h$ rappresenta il contributo dovuto al moto dell'operatore dal tempo corrente fino all'arresto del robot; è calcolato secondo la velocità relativa $v_h$, funzione del tempo, che può variare per cambio di velocità o direzione della persona. Se la velocità della persona \textbf{non è monitorata}, il progetto deve assumere $v_h = 1{,}6$~m/s nella direzione che riduce maggiormente la distanza di separazione;
+    \item $S_r$ rappresenta il contributo dovuto al moto del robot dall'ingresso della persona nel campo di rilevamento fino all'attivazione dello stop da parte del sistema di controllo; è calcolato secondo la velocità relativa $v_r$, funzione del tempo; il sistema deve essere progettato per tenere conto di $v_r$ variabile nel modo che riduce maggiormente la distanza di separazione.
+\end{itemize}
+
+\begin{note}[Riferimenti]
+ISO STANDARD 10218, \emph{Robots and robotic devices — Safety requirements for industrial robots}; ISO/TS 15066, \emph{Robots and robotic devices — Collaborative robots}; Björn Matthias (ABB Corporate Research), \emph{Collaborative Robots — Power and Force Limiting}; Jeff Fryman, Björn Matthias, \emph{Safety of Industrial Robots: From Conventional to Collaborative Applications}, ROBOTIK 2012, Munich; engineering.com, \emph{A History of Collaborative Robots: From Intelligent Lift Assists to Cobots}; documentazione Omron sul collaborative robot rated stop.
+\end{note}

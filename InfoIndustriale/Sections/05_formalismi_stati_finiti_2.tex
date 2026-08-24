@@ -1,0 +1,66 @@
+% ============================================================
+% Capitolo 5 — Formalismi a stati finiti, seconda parte
+% (20260410 Formalismi a stati finiti 2p.pdf)
+% ============================================================
+\chapter{Formalismi a stati finiti (seconda parte): Part-Whole Statecharts}
+\label{cap:formalismi-2}
+
+\section{Part-Whole Statecharts (PWS)}
+\begin{defn}[Part-Whole Statecharts]
+Formalismo che \textbf{separa il comportamento dei componenti da quello del sistema complessivo}, attraverso due sezioni distinte e parallele:
+\begin{enumerate}
+    \item \textbf{Assembly} (comportamenti locali dei componenti);
+    \item \textbf{System section} (\emph{Whole}, comportamento globale).
+\end{enumerate}
+\end{defn}
+
+\subsection{Observer/Controller Pattern}
+Il pattern di riferimento dei PWS risponde alla domanda: «chi può conoscere/controllare gli altri componenti?»
+\begin{itemize}
+    \item \textbf{Componenti}: no, neppure il Sistema (Whole) è conosciuto dai componenti. Ogni componente è \textbf{comportamentalmente isolato};
+    \item \textbf{Sistema}: sì, conosce e controlla i componenti.
+\end{itemize}
+
+\section{Come funzionano i PWS}
+Ogni componente è modellato come un'\textbf{automa a stati riusabile e testabile in isolamento}. Il sistema (\emph{Whole}) coordina i componenti tramite:
+\begin{enumerate}
+    \item \textbf{Eventi diretti} (non broadcast);
+    \item \textbf{Guardie} sulle transizioni.
+\end{enumerate}
+
+\subsection{Componenti: attuatori e sensori}
+\begin{itemize}
+    \item \textbf{Attuatori}: caratterizzati da eventi \textbf{trigger} (come \texttt{start} e \texttt{stop}) che fanno scattare le rispettive transizioni;
+    \item \textbf{Sensori}: possono avere \textbf{transizioni che scattano da sole}, senza alcun trigger che le faccia scattare (\textbf{transizioni autonome}, notate con notazione grafica dedicata).
+\end{itemize}
+
+\subsection{Sistema (intero, \emph{Whole})}
+\begin{itemize}
+    \item È caratterizzato da eventi trigger (come \texttt{stop} e \texttt{on}) che fanno scattare le rispettive transizioni;
+    \item può avere \textbf{guardie} alle transizioni, che costituiscono condizione necessaria affinché la transizione scatti;
+    \item può inviare \textbf{eventi diretti} (azioni) alle componenti attraverso \textbf{liste di azioni}: ad esempio \texttt{< p.stop, v.close >}.
+\end{itemize}
+
+\section{Proposizioni di stato e verifica della sicurezza}
+Attraverso \textbf{proposizioni di stato} si possono:
+\begin{itemize}
+    \item esplicitare \textbf{invarianti} (es.\ «se pressione è alta, la pompa è spenta e la valvola è chiusa»);
+    \item derivare \textbf{safety axioms} controllando solo gli stati del sistema (non combinazioni esplosive di stati locali);
+    \item evitare il \textbf{model checking pesante}, usando logica proposizionale per garantire sicurezza.
+\end{itemize}
+
+\section{Statecharts vs.\ PW-Statecharts}
+\begin{note}[Confronto]
+\begin{tabular}{p{0.45\textwidth}p{0.45\textwidth}}
+\textbf{Problema Statecharts} & \textbf{Soluzione PW-Statecharts}\\
+\hline
+Perdita di modularità & Isolando completamente i componenti\\
+Complessità della sincronizzazione & Centralizzando logica e coordinamento\\
+Difficoltà di test e certificazione & Permettendo test modulari e semantica globale chiara\\
+Verifica della sicurezza & Tramite proposizioni e transizioni sicure\\
+\end{tabular}
+\end{note}
+
+\begin{intuition}[In sintesi]
+Dove gli Statecharts classici di Harel fallivano (regioni ortogonali interdipendenti, Capitolo~\ref{cap:formalismi-1}), i PWS ribaltano l'architettura: i componenti sono automi completamente isolati e riusabili, e tutte le interazioni passano dal sistema (Whole), che osserva e comanda. La sicurezza si verifica a livello di sistema con proposizioni di stato, senza esplorare il prodotto cartesiano degli stati locali.
+\end{intuition}

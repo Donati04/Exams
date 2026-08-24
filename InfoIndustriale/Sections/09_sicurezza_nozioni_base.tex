@@ -1,0 +1,236 @@
+% ============================================================
+% Capitolo 9 — Sicurezza e pericolo: nozioni di base
+% (Sicurezza nozioni base 2025-26.pdf)
+% ============================================================
+\chapter{Sicurezza e pericolo: nozioni di base}
+\label{cap:sicurezza-base}
+
+La sicurezza (\emph{safety}) e i pericoli (\emph{hazards}) associati ai sistemi ingegneristici controllati da computer sono aspetti fondamentali da comprendere per poter progettare sistemi in grado di garantirli.
+
+\section{Classificazione dei sistemi in base alla sicurezza}
+\begin{defn}[Sistemi safety-critical]
+Sistemi progettati per prevenire incidenti che possono mettere a rischio vite umane o causare danni ambientali significativi. Esempi: sistema di controllo di un reattore nucleare, sistema frenante di un aereo o di un'automobile. In questi casi eventuali guasti devono essere gestiti in modo da portare l'oggetto controllato in uno stato sicuro (\textbf{fail-safe}) o, al minimo, segnalare immediatamente il problema (\textbf{fail-explicit}).
+\end{defn}
+
+\begin{itemize}
+    \item \textbf{Mission-critical}: sistemi essenziali per il completamento di una missione o di un'operazione specifica;
+    \item \textbf{Business-critical}: sistemi il cui fallimento comporta gravi ripercussioni economiche o di reputazione per un'organizzazione.
+\end{itemize}
+
+\section{Sicurezza (Safety)}
+\begin{defn}[Sicurezza]
+La sicurezza di un sistema è la proprietà di \textbf{non recare danno alla vita umana o all'ambiente} durante il suo funzionamento. Garantire la sicurezza è un'attività prevalentemente umana, spesso considerata più un'arte che una scienza nelle fasi iniziali di progettazione.
+\end{defn}
+
+Per assicurare la sicurezza occorre un approccio integrato che tenga conto di diversi fattori del sistema:
+\begin{itemize}
+    \item il \textbf{software} (che controlla la logica di funzionamento);
+    \item l'\textbf{hardware} (sensori, attuatori, cablaggi, connettori, alimentazione, ecc.);
+    \item la \textbf{topologia} del sistema (come sono collegati i componenti e come circolano segnali e informazioni);
+    \item la \textbf{manutenzione} del sistema nel tempo;
+    \item gli \textbf{operatori umani} coinvolti nel processo.
+\end{itemize}
+Tutti questi elementi contribuiscono alla sicurezza complessiva: trascurarne uno potrebbe compromettere l'obiettivo generale.
+
+\section{Pericolo (Hazard)}
+\begin{defn}[Pericolo / Hazard]
+Ciascuna situazione potenzialmente dannosa in cui il sistema può causare danno. Il modo più importante per migliorare la sicurezza di un sistema è \textbf{identificare tutte le modalità} in cui esso può causare danno. Esempio: in un macchinario industriale, una parte meccanica in movimento che può causare una lesione a un operatore.
+\end{defn}
+
+\subsection{Le due dimensioni del pericolo: Rischio e Danno}
+\begin{defn}[Rischio]
+La \textbf{probabilità} che il pericolo si trasformi effettivamente in un incidente e in un danno: la chance che una persona o un oggetto subiscano conseguenze a causa di quel pericolo, passando da una condizione potenziale a un evento reale. Un rischio elevato significa che è molto probabile che il pericolo si manifesti (perché presente frequentemente o perché i controlli sono scarsi); un rischio basso indica un evento raro.
+\end{defn}
+
+\begin{defn}[Danno]
+La \textbf{gravità delle conseguenze} se il pericolo dovesse concretizzarsi. È una stima quantitativa o qualitativa: può variare da conseguenze lievi (danni minori, nessun ferito) fino a conseguenze gravissime o catastrofiche (lesioni gravi, perdita di vite umane, grandi danni materiali o ambientali).
+\end{defn}
+
+\begin{ex}[Banco di prova con braccio robotico]
+Il \textbf{pericolo} è il braccio robotico in movimento, che potrebbe colpire un operatore se si avvicina troppo. Il \textbf{rischio} dipende da quanto è probabile che qualcuno entri nella zona di movimento del robot mentre è in funzione (errore o disattenzione, o fallimento dei sistemi di rilevamento presenza). Il \textbf{danno} potenziale è la severità dell'infortunio in caso di impatto: da un livido fino a lesioni mortali, a seconda di forza e velocità del braccio.
+
+Identificare pericoli come questo e valutarne rischio e danno viene effettuato redigendo un documento di progetto noto come \textbf{Risk Analysis}. Individuati i pericoli si progettano \textbf{contromisure} (sensori di presenza, barriere di sicurezza, procedure operative) per prevenire l'incidente o mitigarne le conseguenze.
+\end{ex}
+
+\subsection{Valutazione quantitativa e qualitativa}
+Per ogni pericolo identificato si valutano due aspetti: la \textbf{probabilità di occorrenza} e la \textbf{gravità del danno}. Spesso vengono suddivisi in categorie:
+\begin{itemize}
+    \item probabilità: \emph{frequente}, \emph{occasionale}, \emph{rara}, \emph{estremamente improbabile};
+    \item conseguenze: da \emph{lievi} (danni trascurabili) fino a \emph{catastrofiche} (perdite umane o gravi danni materiali/ambientali).
+\end{itemize}
+
+\subsection{Matrice dei rischi}
+Incrociando le categorie di probabilità e quelle di gravità del danno si rappresenta il rischio su una \textbf{matrice}: ogni combinazione corrisponde a un livello di pericolo più o meno critico. Un evento molto probabile con conseguenze gravi dà un rischio alto; un evento rarissimo con danno minimo dà un rischio basso. La matrice rischio--danno fornisce un quadro chiaro su quali pericoli richiedono interventi immediati e quali sono accettabili.
+
+\subsection{Classi di pericolo e accettabilità del rischio}
+\begin{enumerate}
+    \item[\textbf{I.}] \textbf{Inaccettabile} in qualsiasi circostanza: pericolo grave e probabile, da eliminare o ridurre assolutamente; non è ammissibile continuare l'operatività senza mitigazione;
+    \item[\textbf{II.}] \textbf{Indesiderabile}: tollerabile solo se ogni ulteriore riduzione è impraticabile o i costi sarebbero enormemente sproporzionati rispetto ai benefici in termini di sicurezza;
+    \item[\textbf{III.}] \textbf{Tollerabile} (accettabile): solo se il costo o l'impegno per ridurlo ulteriormente supera il miglioramento di sicurezza ottenuto; il pericolo è sotto controllo;
+    \item[\textbf{IV.}] \textbf{Accettabile} così com'è, anche se potrebbe essere opportuno monitorarlo: pericolo così remoto o di danno così lieve da non richiedere misure correttive attive, ma tenuto sotto osservazione.
+\end{enumerate}
+
+\begin{note}[Rischio tollerabile: considerazioni etiche]
+\begin{itemize}
+    \item \textbf{Valore della vita vs.\ analisi economica}: non ridurre il rischio al minimo possibile può compromettere la protezione della vita umana, anche se il miglioramento aggiuntivo appare economicamente sproporzionato;
+    \item \textbf{Trasparenza e consenso informato}: informare pienamente le parti interessate sulle scelte e sui rischi residui, garantendo il diritto di essere consapevoli e coinvolti;
+    \item \textbf{Responsabilità morale di progettisti e istituzioni}: oltre alla logica economica, adottare tutte le misure ragionevoli per minimizzare il rischio, in considerazione dei valori umani e sociali.
+\end{itemize}
+\end{note}
+
+\section{Sistemi di base per garantire la sicurezza}
+Identificati e valutati i pericoli, entrano in gioco i sistemi di protezione. Due meccanismi di base, spesso complementari:
+\begin{enumerate}
+    \item \textbf{Interlock} (blocchi dinamici);
+    \item \textbf{Guard} (sbarramenti fisici).
+\end{enumerate}
+
+\subsection{Interlock (blocco)}
+\begin{defn}[Interlock]
+Sistema \textbf{attivo} che impedisce al sistema pericoloso di funzionare a meno che non siano soddisfatte determinate condizioni di sicurezza: monitora una condizione e \textbf{blocca l'operazione} se la situazione non è sicura.
+\end{defn}
+
+Esempi:
+\begin{itemize}
+    \item \textbf{Semaforo rosso ferroviario}: segnala che il tratto di binario successivo è occupato e di fatto impedisce (in combinazione con i sistemi di bordo e il macchinista) l'avanzamento del treno finché non diventa verde; il «blocco» viene annullato solo quando la condizione di sicurezza (binario libero) è soddisfatta;
+    \item \textbf{Interlock software}: in robotica collaborativa, la funzione \emph{safety monitored stop} ferma immediatamente il robot se un sensore rileva la presenza di un operatore umano troppo vicino.
+\end{itemize}
+In entrambi i casi l'interlock è \textbf{logico}: il treno non può avanzare finché il treno successivo non è distante; il robot non può continuare a muoversi finché la persona non esce dall'area pericolosa.
+
+\subsection{Guard (sbarramento)}
+\begin{defn}[Guard / sbarramento]
+Sistema \textbf{passivo}: barriera fisica o dispositivo che impedisce l'accesso di persone o altri sistemi a zone pericolose. Invece di agire sul funzionamento della macchina, agisce sulle persone o sulle cose, tenendole lontane dal pericolo.
+\end{defn}
+Esempi: sbarre di un passaggio a livello (bloccano fisicamente la strada al passaggio del treno); gabbie protettive attorno ai robot industriali o ai macchinari (prevengono il contatto accidentale con l'area pericolosa).
+
+\subsection{Differenze e similitudini}
+\begin{itemize}
+    \item A differenza dell'interlock, la guardia \textbf{non ferma attivamente la macchina}: il macchinario potrebbe continuare a muoversi, ma grazie alla barriera nessuno può avvicinarsi abbastanza da farsi male;
+    \item allo stesso tempo, limitare la libertà di movimento di un operatore ne limita l'operatività;
+    \item i due approcci possono \textbf{coesistere}: ad esempio una porta di accesso a un'area robotizzata può essere chiusa da una guardia (serratura di sicurezza) e collegata a un interlock elettronico che spegne il robot se la porta viene aperta.
+\end{itemize}
+
+\section{Ruolo dell'oggetto controllato}
+Aspetto cruciale della progettazione: valutare quanto l'oggetto o il processo controllato possa essere \textbf{messo in uno stato sicuro in caso di emergenza}. Se si verifica un pericolo, il sistema controllato può essere arrestato o reso innocuo in tempo? La risposta dipende dalla natura del sistema e determina come impostare le misure di sicurezza.
+
+\subsection{Pericoli non controllabili}
+Se l'oggetto controllato \textbf{non può} limitare o interrompere rapidamente la sua funzione pericolosa, allora il superamento di una guardia (violazione della barriera) costituisce un \textbf{pericolo non mitigabile}.
+
+\subsection{Pericoli controllabili}
+Se l'oggetto sotto controllo \textbf{può} ridurre, arrestare o mettere in sicurezza la propria funzione pericolosa, allora il superamento di una guardia può essere reso sicuro da un \textbf{interlock}: anche se una persona entra in una zona vietata, un meccanismo interviene automaticamente per neutralizzare il pericolo.
+
+Esempi:
+\begin{itemize}
+    \item \textbf{Robot collaborativo}: \emph{Safety Monitored Stop}, \emph{Speed and Separation Monitoring} e \emph{Power and Force Limiting} non sono altro che interlock molto sofisticati;
+    \item \textbf{Macchine utensili}: ripari che, se aperti, attivano interruttori di sicurezza (interlock elettromeccanici) che spengono la macchina all'istante. Esempio: una sega circolare industriale protetta da carter — se l'operatore rimuove il carter (superando la guardia fisica), un interruttore interrompe l'alimentazione e blocca la lama in frazioni di secondo.
+\end{itemize}
+
+Quando l'oggetto controllato è in grado di raggiungere rapidamente uno stato sicuro, interlock e guardie insieme forniscono \textbf{livelli ridondanti di protezione}: la guardia cerca di evitare l'errore umano limitando l'accesso, l'interlock interviene se tale errore avviene comunque.
+
+\section{Classificazione dei sistemi in base alla gestione dei guasti}
+I sistemi di controllo possono essere classificati in base alle strategie con cui rilevano e affrontano situazioni di malfunzionamento: \emph{fail safe}, \emph{fail operational}, \emph{fail silent}/\emph{fail explicit}, \emph{bizantini}.
+
+\subsection{Sistemi Fail Safe}
+\begin{defn}[Fail-safe]
+Un sistema è fail-safe quando, in caso di guasto o malfunzionamento, è in grado di portare l'oggetto controllato in uno \textbf{stato di sicurezza} (o mantenerlo in sicurezza): se qualcosa va storto, il sistema «cade» in una condizione che non causa danni o li minimizza. Comportamento desiderabile in molti sistemi critici.
+\end{defn}
+
+Esempi di meccanismi fail-safe:
+\begin{itemize}
+    \item \textbf{Frenatura di emergenza di un ascensore}: se la fune di sollevamento si rompe, scattano automaticamente freni meccanici che bloccano la cabina, impedendo la caduta libera;
+    \item \textbf{Valvola di sicurezza di una pentola a pressione}: se la pressione interna supera un certo limite, la valvola si apre e sfoga il vapore, evitando l'esplosione.
+\end{itemize}
+
+Il comportamento fail-safe spesso dipende dalle \textbf{caratteristiche intrinseche dell'oggetto controllato} e potrebbe non essere possibile in tutte le condizioni:
+\begin{itemize}
+    \item un'automobile moderna in caso di guasto al motore permette in genere al conducente di accostare e fermarsi in sicurezza (fail-safe);
+    \item un aeroplano non può «fermarsi in volo» se i motori si spengono: durante decollo o atterraggio la perdita di potenza può essere catastrofica perché non esiste uno stato di sicurezza facilmente raggiungibile in aria.
+\end{itemize}
+
+Se il raggiungimento di uno stato di sicurezza è fisicamente possibile, il sistema di controllo può essere progettato per facilitarlo: i treni hanno sistemi che inseriscono automaticamente la frenatura d'emergenza se il macchinista non risponde ai segnali di vigilanza (il cosiddetto «uomo morto»). \textbf{Fail-safe non significa che non avvenga mai un incidente}, ma che il sistema è progettato per minimizzare le conseguenze quando accade un guasto specifico.
+
+\subsection{Watchdog (sistema di sorveglianza)}
+\begin{defn}[Watchdog]
+Dispositivo o processo che \textbf{monitora costantemente} il corretto funzionamento di un componente principale, pronto a intervenire se qualcosa non va. È un sistema di controllo aggiuntivo, di solito molto semplice e affidabile, che serve a controllare il sistema di controllo primario. Nei sistemi complessi può essere necessario per garantire il comportamento fail-safe.
+\end{defn}
+Il watchdog verifica periodicamente se il sistema principale è attivo e reattivo, tipicamente attraverso un segnale o una piccola interazione: il sistema principale deve «dare un cenno» a intervalli regolari. Se il watchdog non riceve conferma entro un certo intervallo, presume il guasto e attiva le azioni di emergenza (spesso portando il sistema in modalità fail-safe). Esempio: nelle metropolitane il macchinista deve premere un pulsante/pedale periodicamente; in caso contrario scatta la frenata automatica d'emergenza.
+
+\subsection{Sistemi Fail Operational}
+\begin{defn}[Fail-operational]
+Un sistema fail-operational è in grado di \textbf{continuare a funzionare nonostante un guasto}, garantendo comunque un livello di sicurezza accettabile. L'obiettivo non è spegnere tutto in sicurezza, ma mantenere attivo il servizio in modo sicuro, perché interromperlo potrebbe essere altrettanto rischioso o inaccettabile quanto il guasto stesso.
+\end{defn}
+Si ottiene principalmente attraverso:
+\begin{itemize}
+    \item la \textbf{ridondanza} dei componenti critici;
+    \item un'efficace \textbf{rilevazione dei guasti} (meccanismo che si accorge del guasto e isola il componente difettoso).
+\end{itemize}
+
+\begin{defn}[Sistema degradato]
+Sistema che opera con uno o più componenti guasti ma funziona ancora: capacità ridotte o meno ridondanza, ma svolge comunque la sua funzione.
+\end{defn}
+È fondamentale non mascherare completamente i guasti senza segnalare il degrado: se il sistema continua a funzionare come se nulla fosse, un ulteriore guasto può trovare il sistema già indebolito e portare al collasso. I sistemi fail-operational devono \textbf{tollerare i guasti e comunicare} che operano in modalità degradata.
+
+\begin{ex}[Aereo di linea]
+Anche se un motore si spegne in volo, l'aereo è progettato per continuare a volare con gli altri motori (a costo di ridurre l'altitudine o deviare; nota: dipende da diverse caratteristiche). Molte funzioni critiche sono triplicate (tripli sistemi idraulici, tripli computer di controllo di volo, ecc.) così che il guasto di un singolo elemento non comprometta la missione.
+\end{ex}
+
+\begin{ex}[Centrale nucleare e sensoristica ridondante]
+Un sistema di pompe raffredda il nocciolo. Se una pompa si ferma (guasto), altre pompe devono entrare in azione immediatamente (fail-operational). Come rilevare che la pompa principale è ferma? Con un sensore di flusso o pressione. Ma anche il sensore può guastarsi: se non rileva nulla, la pompa è ferma o il sensore è rotto?
+
+Si introduce la ridondanza nella sensoristica: due sensori indipendenti per la stessa grandezza. Ma se un sensore segnala «OK» e l'altro «guasto», a chi credere? Con due soli sensori, in caso di conflitto il sistema non sa quale informazione sia corretta.
+\end{ex}
+
+\begin{defn}[TMR — Triple Modular Redundancy]
+Si utilizzano \textbf{tre sensori} per la stessa grandezza: in condizioni normali tutti e tre danno lo stesso responso; se uno differisce, i due che concordano «vincono» per \textbf{maggioranza}. La probabilità che due sensori su tre siano guasti contemporaneamente dando lo stesso valore sbagliato è estremamente bassa: se un sensore ha 1/1000 di probabilità di guasto in un dato intervallo, il doppio guasto indipendente è dell'ordine di 1/1.000.000.
+\end{defn}
+
+Nel \textbf{sistema di votazione} (\emph{voting}) i sensori «votano» sullo stato del componente monitorato e la maggioranza determina la decisione (es.\ spegnere la pompa o attivare la riserva se due sensori su tre rilevano il guasto della principale). In ambito aeronautico e spaziale la tripla ridondanza è comune nei sistemi di guida e controllo: i computer di bordo sono triplicati e confrontano continuamente i risultati; se uno «impazzisce», gli altri due lo escludono.
+
+\subsection{Sistemi Fail Silent e Fail Explicit}
+\begin{defn}[Fail-silent]
+Un sistema fail-silent, in caso di guasto, \textbf{smette di funzionare senza segnalare alcun allarme} o indicazione esplicita: da fuori non si vede nulla di diverso, semplicemente non risponde più. Comportamento rischioso: altri componenti o operatori potrebbero non distinguere un malfunzionamento da un semplice ritardo.
+\end{defn}
+
+Per ovviare ai problemi del fail-silent si trasforma il guasto silenzioso in un guasto esplicito (\textbf{fail-explicit}). La soluzione generale è \textbf{monitorare il sistema attivo e impostare dei timeout}: se un componente A invia una richiesta a B, parte contemporaneamente un timer tarato sul tempo massimo di risposta atteso (\emph{worst-case}); se il timer scade prima della risposta, A dichiara B guasto e intraprende azioni di sicurezza. Meglio un sistema fail-explicit, con guasto dichiarato apertamente, che un silenzio ambiguo.
+
+\begin{ex}[Semafori stradali]
+Se il controllore elettronico del semaforo si guasta, le luci entrano in modalità lampeggiante (giallo lampeggiante) o si spengono in modo riconoscibile, segnalando agli automobilisti di procedere con cautela come a uno stop. Comportamento preferibile a un semaforo bloccato su verde o rosso fisso: in quel caso gli utenti potrebbero non capire il guasto, con confusione o pericolo.
+\end{ex}
+
+\subsection{Sistemi Bizantini}
+\begin{defn}[Guasto bizantino]
+Comportamento \textbf{arbitrariamente errato o malizioso} di un componente del sistema, dal problema dei «Generali di Bisanzio» dell'informatica distribuita. Un componente bizantino può fornire informazioni false, contraddittorie o deliberatamente fuorvianti nel peggiore modo possibile: può fingere di funzionare inviando comandi sbagliati, funzionare a intermittenza, o comportarsi diversamente con componenti differenti. È il caso più difficile da gestire: il componente sembra «vivo» ma non è affidabile, anzi può ingannare attivamente il sistema.
+\end{defn}
+
+\begin{ex}[Centralina sabotata]
+In un sistema di controllo distribuito con più centraline, una centralina sabotata da codice maligno (attacco hacker) potrebbe inviare letture di sensori falsificate o comandi pericolosi agli attuatori. Dal punto di vista degli altri componenti è imprevedibile: a volte risponde correttamente, altre no, oppure fornisce dati incoerenti.
+\end{ex}
+
+Le tecniche di tolleranza ai guasti bizantini aggiungono ridondanza e meccanismi di controllo incrociato tali che, anche se un nodo si comporta male, il sistema possa identificarlo e isolarlo continuando a funzionare correttamente. Spesso si assume un limite (es.\ al massimo 1 nodo bizantino alla volta), perché tollerare guasti arbitrari simultanei multipli diventa molto complesso.
+
+\subsubsection{Approccio Voltan}
+L'approccio Voltan trasforma potenziali comportamenti bizantini in comportamenti \textbf{fail-silent} attraverso duplicazione e confronto costante tra due sottosistemi gemelli:
+\begin{itemize}
+    \item ogni nodo critico è realizzato da \textbf{due processori identici} che eseguono esattamente gli stessi calcoli in parallelo, in modo quasi sincrono, comunicando attraverso un canale hardware dedicato ad alta velocità;
+    \item ogni ingresso viene fornito simultaneamente a entrambi; ciascuno elabora indipendentemente con lo stesso algoritmo deterministico;
+    \item a fine elaborazione i due gemelli \textbf{confrontano i risultati} attraverso il canale diretto.
+\end{itemize}
+
+\textbf{Se i risultati coincidono}: entrambi funzionano correttamente; l'output viene considerato valido e marcato con \textbf{due «firme» digitali}, una di ciascun processore, così i nodi riceventi sanno che è stato approvato da entrambi (impedisce a un singolo gemello bizantino di inviare messaggi da solo).\\
+\textbf{Se i risultati differiscono}: qualcosa non va (un processore è guasto o attaccato); il nodo si \textbf{blocca immediatamente}, non trasmette alcun output e non firma più messaggi, entrando in uno stato di blocco definitivo.
+
+Formalmente: ciascun gemello riceve la richiesta, elabora una risposta e la invia al nodo gemello. Due casi:
+\begin{enumerate}
+    \item[A.] La risposta del gemello è identica a quella elaborata in proprio: il nodo N firma la sua risposta e la invia;
+    \item[B.] La risposta del gemello differisce: N si blocca indefinitamente senza formare la propria risposta.
+\end{enumerate}
+
+L'effetto pratico: anche se uno dei due processori si comporta in modo bizantino, il nodo nel complesso si comporta come \textbf{fail-silent}: o dà risposte corrette (risultati coincidenti), oppure tace completamente bloccandosi (gemelli in disaccordo). Si assume che la probabilità di doppio guasto bizantino simultaneo sia trascurabile: almeno uno dei due sarà onesto e qualunque disallineamento farà scattare il blocco. Si controlla così il caso peggiore, trasformando un problema imprevedibile (guasto sleale) in uno più gestibile (da fail-silent a fail-explicit con timeout).
+
+\begin{note}[Sistemi fault tolerant avanzati]
+L'approccio Voltan rientra nei sistemi fault tolerant avanzati, ispirati al Problema dei Generali Bizantini. Nella pratica moderna duplicazione e confronto sono usati ad esempio nelle centraline automobilistiche per funzioni critiche (ABS, guida autonoma): due microcontrollori calcolano in parallelo e verificano la reciproca coerenza. Anche se i guasti bizantini sono rari nell'hardware puro, questa categoria concettuale prepara ad affrontare sabotaggi intenzionali ed errori non convenzionali con il massimo rigore.
+\end{note}
+
+\begin{note}[Bibliografia]
+Kopetz H., \emph{Real-Time Systems, Design Principles for Distributed Real-Time Applications}, Kluwer Academic Publisher, 1997; Storey N., \emph{Safety Critical Computer Systems}, Pearson Prentice Hall, 1996; Leveson N.G., \emph{Engineering a Safer World}, MIT Press.
+\end{note}

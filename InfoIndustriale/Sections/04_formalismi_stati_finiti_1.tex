@@ -1,0 +1,161 @@
+% ============================================================
+% Capitolo 4 — Formalismi a stati finiti, prima parte
+% (20260410 Formalismi a stati finiti 1p.pdf)
+% ============================================================
+\chapter{Formalismi a stati finiti (prima parte)}
+\label{cap:formalismi-1}
+
+\section{Perché usare un formalismo a stati}
+Un \textbf{dispositivo reattivo} evolve nel tempo, passando fra diverse modalità di funzionamento in risposta a eventi, comandi e condizioni dell'ambiente.
+
+Un formalismo a stati permette di rappresentare il comportamento come:
+\begin{itemize}
+    \item un \textbf{insieme finito di stati significativi} (ad es.\ spento, pronto, in lavoro, errore);
+    \item \textbf{transizioni} fra stati, attivate da eventi e condizioni osservate (\textbf{guardie}).
+\end{itemize}
+
+\subsection{Vantaggi principali}
+\begin{itemize}
+    \item Rende il comportamento più chiaro di una descrizione solo testuale;
+    \item separa le modalità operative (stati) dalle singole azioni elementari;
+    \item evidenzia \emph{quando} e \emph{perché} il sistema cambia stato;
+    \item facilita l'analisi di coerenza, completezza e sicurezza.
+\end{itemize}
+Il modello a stati non descrive soltanto \emph{che cosa} il dispositivo fa, ma soprattutto \emph{in quali condizioni} lo fa e \emph{come} passa da una situazione all'altra.
+
+\section{Esempio: data sheet del timer TON vs.\ diagramma a stati}
+\subsection{Data sheet del TON}
+La data sheet del timer TON descrive la relazione fra le variabili (\texttt{IN}, \texttt{ET}, \texttt{PT}, \texttt{Q}):
+\begin{itemize}
+    \item descrive correttamente il TON in termini di variabili e condizioni;
+    \item richiede però di ricostruire mentalmente la sequenza del comportamento;
+    \item è meno immediata per capire «in che fase si trova» il timer.
+\end{itemize}
+
+\subsection{Rappresentazione con diagramma a stati}
+Il diagramma a stati mostra subito le tre situazioni essenziali (\textbf{Reset}, \textbf{TimeIn} ovvero conteggio, \textbf{TimeOut}) e rende esplicite le condizioni di passaggio:
+\begin{itemize}
+    \item \texttt{IN := TRUE} (ingresso in conteggio);
+    \item \texttt{IN := FALSE} (ritorno a reset);
+    \item \texttt{ET > PT} (timeout).
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=stealth, node distance=3.2cm, every node/.style={font=\small}]
+    \node[state, initial, draw] (reset) {Reset};
+    \node[state, draw, right of=reset] (timein) {TimeIn};
+    \node[state, draw, right of=timein] (timeout) {TimeOut};
+
+    \draw[->] (reset) edge[above] node[align=center] {\texttt{IN := TRUE}} (timein);
+    \draw[->] (timein) edge[above] node[align=center] {\texttt{ET > PT}} (timeout);
+    \draw[->] (timeout) edge[bend left=45] node[below, align=center] {\texttt{IN := FALSE}} (reset);
+    \draw[->] (timein) edge[bend left=45] node[below, align=center] {\texttt{IN := FALSE}} (reset);
+\end{tikzpicture}
+\caption{Comportamento del timer TON come diagramma a stati: Reset (IN = FALSE, Q = FALSE), TimeIn (conteggio, Q = FALSE, ET $\le$ PT), TimeOut (Q = TRUE, ET $>$ PT).}
+\label{fig:ton-stati}
+\end{figure}
+
+Facilita comprensione, spiegazione e verifica del comportamento.
+
+\section{Statecharts}
+\begin{defn}[Statechart]
+Estensione dei diagrammi a stati finiti, progettata per modellare sistemi complessi e reattivi. Introdotto da \textbf{David Harel nel 1987} per affrontare la complessità dei sistemi reattivi (come quelli avionici). Fornisce una rappresentazione visiva e modulare del comportamento di sistemi complessi.
+\end{defn}
+
+Caratteristiche principali:
+\begin{itemize}
+    \item \textbf{Gerarchia}: decomposizione dei sistemi in sottostati, per gestire la complessità;
+    \item \textbf{Concorrenza}: stati paralleli (regioni ortogonali) per modellare comportamenti simultanei;
+    \item \textbf{Transizioni inter-livello}: transizioni tra stati a diversi livelli della gerarchia.
+\end{itemize}
+
+Applicazioni: sistemi embedded e in tempo reale, protocolli di comunicazione, interfacce uomo-macchina. Vantaggi: riduzione della complessità attraverso la modularità, facilità di comprensione e manutenzione, supporto per simulazione e verifica formale.
+
+\subsection{Stati XOR (decomposizione gerarchica)}
+\begin{defn}[Stato XOR]
+Uno stato XOR (o stato composto) rappresenta una gerarchia in cui, entrando nello stato superiore, il sistema si trova in \textbf{uno solo} dei suoi sottostati alla volta.
+\end{defn}
+Caratteristiche:
+\begin{itemize}
+    \item modellano comportamenti mutuamente esclusivi;
+    \item riducono la complessità evitando la duplicazione di transizioni comuni;
+    \item esempio: in un lettore musicale lo stato «Riproduzione» può avere sottostati «In pausa», «In riproduzione», «Arrestato»; il sistema è in uno solo di questi alla volta.
+\end{itemize}
+
+\subsection{Stati AND (regioni ortogonali)}
+\begin{defn}[Stato AND]
+Uno stato AND (o stato con regioni ortogonali) rappresenta una decomposizione parallela in cui, entrando nello stato superiore, il sistema si trova \textbf{simultaneamente in tutti} i suoi sottostati.
+\end{defn}
+Caratteristiche:
+\begin{itemize}
+    \item modellano comportamenti concorrenti o indipendenti;
+    \item ogni regione ortogonale può evolversi indipendentemente dalle altre;
+    \item evitano la combinazione esplosiva di stati (niente moltiplicazione di stati per ogni combinazione possibile).
+\end{itemize}
+
+\begin{note}[Confronto XOR vs.\ AND]
+\begin{tabular}{lll}
+\textbf{Caratteristica} & \textbf{Stato XOR} & \textbf{Stato AND}\\
+\hline
+Attività simultanee & No & Sì\\
+Complessità & Riduce la duplicazione & Gestisce la concorrenza\\
+Indipendenza & Stati mutuamente esclusivi & Stati indipendenti e paralleli\\
+Utilizzo tipico & Macchine a stati & Comportamenti concorrenti\\
+\end{tabular}
+\end{note}
+
+\subsection{Macchine a stati concorrenti}
+Usando appropriatamente i due meccanismi di decomposizione si costruiscono \textbf{macchine a stati concorrenti}: ciascuna macchina è ospitata in una sezione AND di uno stato decomposto. Dato che una macchina si trova in un unico stato alla volta, ogni sezione AND viene decomposta in una serie di stati XOR che costituiscono gli stati della macchina in essa contenuta.
+
+\subsection{Esempio storico: Citizen Quartz Multi-Alarm III}
+L'esempio classico (dall'articolo di Harel \emph{Statecharts: A Visual Formalism for Complex Systems}) è il modello comportamentale dell'orologio Citizen Quartz Multi-Alarm III, ottimo esempio di decomposizione XOR e AND combinata.
+
+Lo statechart mostra lo stato principale \texttt{main} (e lo stato secondario \texttt{dead}), all'interno del quale si trovano sei regioni ortogonali (AND): quando il sistema è in \texttt{main}, tutte le regioni sono attive contemporaneamente ed ognuna evolve indipendentemente:
+\begin{enumerate}
+    \item \texttt{main}
+    \item \texttt{alarm1-status}
+    \item \texttt{alarm2-status}
+    \item \texttt{chime-status}
+    \item \texttt{light}
+    \item \texttt{power}
+\end{enumerate}
+
+\textbf{Decomposizione AND (mutuamente parallela):} le regioni AND sono separate da linee tratteggiate verticali all'interno di \texttt{main}. Ad esempio \texttt{alarm1-status} e \texttt{alarm2-status} funzionano in parallelo: ciascuna può essere \texttt{enabled} o \texttt{disabled} indipendentemente dall'altra. \texttt{chime-status} è più complessa: ha uno stato \texttt{enabled} al cui interno si trova una decomposizione OR (\texttt{quiet} e \texttt{beep}).
+
+\textbf{Decomposizione XOR (mutuamente esclusiva):} alcune regioni usano la decomposizione XOR per i propri sottostati: in \texttt{alarm1-status} e \texttt{alarm2-status} il sistema è in uno e uno solo tra \texttt{enabled} e \texttt{disabled}; in \texttt{chime-status} si entra in un sottostato che può essere \texttt{quiet} oppure \texttt{beep} (2 secondi, a ogni ora intera).
+
+\textbf{Eventi e transizioni:} il diagramma usa eventi esterni (\texttt{batt.inserted}, \texttt{batt.removed}, \texttt{batt.weakens}, \texttt{in.alarm1.on}, ecc.), azioni (es.\ \texttt{/clh(main*)} indica il ritorno allo stato principale con azione \texttt{clh}) e condizioni (es.\ \texttt{T is whole hour}).
+
+\subsection{Sintassi Statecharts}
+\begin{itemize}
+    \item \textbf{Eventi}: fanno avvenire le transizioni. Esempio: se la macchina a stati nella sezione parallela \texttt{valve} si trova in \texttt{Open} ed è presente l'evento \texttt{close}, passa a \texttt{Closed};
+    \item \textbf{Guardie}: condizioni booleane sullo stato di altre macchine, associate alle transizioni; costituiscono \textbf{condizione necessaria} affinché la transizione avvenga. Esempio: se \texttt{valve} è in \texttt{Closed} ed è presente l'evento \texttt{open}, passa a \texttt{Open} se e solo se la sezione \texttt{pressure} (abbreviata \texttt{p}) è in \texttt{Low}, scritto \texttt{[p=Low]};
+    \item \textbf{Eventi broadcast}: gli eventi preceduti dal simbolo «\texttt{/}» vengono inviati a tutte le altre sezioni parallele, eventualmente avviandovi una transizione. Esempio: se \texttt{pump} è in \texttt{Stop} ed è presente \texttt{start}, passa in marcia inviando l'evento \texttt{open} alle altre sezioni.
+\end{itemize}
+
+\section{Il problema dell'interdipendenza tra regioni ortogonali}
+\begin{note}[Aspettativa teorica vs.\ realtà]
+\textbf{Nella decomposizione AND} le regioni dovrebbero evolversi in parallelo, ognuna gestendo il proprio sottoinsieme di stati, concettualmente indipendenti.\\
+\textbf{Nel modello del Citizen Quartz (e in molti sistemi reali)} le regioni condividono eventi (\texttt{batt.removed}, \texttt{in.alarm1.on}, \texttt{T is whole hour}) e le transizioni in una regione possono dipendere dallo stato o dal comportamento di un'altra.
+\end{note}
+
+Conseguenze dell'interdipendenza:
+\begin{itemize}
+    \item \textbf{Perdita di modularità}: le regioni non possono essere progettate in isolamento; modifiche a una regione possono introdurre effetti collaterali sulle altre;
+    \item \textbf{Aumento del coupling semantico}: anche se il modello è strutturato «in parallelo», la semantica diventa interdipendente e intrecciata; si crea una dipendenza logica tra regioni che rompe l'astrazione parallela.
+\end{itemize}
+
+\subsection{Esempio: sistema biomedico}
+Un sistema biomedico composto da tre componenti, ciascuna macchina a stati derivante da decomposizione OR ospitata in tre differenti decomposizioni AND:
+\begin{itemize}
+    \item \texttt{p}: la pompa di infusione;
+    \item \texttt{v}: la valvola antireflusso;
+    \item \texttt{ps}: il sensore di pressione.
+\end{itemize}
+
+\begin{intuition}[«La complessità che esce dalla porta rientra dalla finestra»]
+Nonostante il numero minore di stati, le diverse sezioni parallele si devono sincronizzare attraverso relazioni causali mutue (eventi e guardie) di non facile comprensibilità, che limitano la riusabilità delle macchine a stati. Ad esempio la pompa non è una pompa a sé stante, ma una pompa collegata e dipendente da una valvola e da un sensore di pressione. Le sincronizzazioni mutue (frecce grigie nei diagrammi) sono ciò che rende tre parti autonome un'unica macchina.
+\end{intuition}
+
+Questa criticità motiva la seconda parte: i \textbf{Part-Whole Statecharts} (Capitolo~\ref{cap:formalismi-2}), che separano esplicitamente i comportamenti dei componenti da quello del sistema.

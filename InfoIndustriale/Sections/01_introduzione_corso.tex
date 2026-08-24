@@ -1,0 +1,220 @@
+% ============================================================
+% Capitolo 1 — Introduzione al corso (Presentazione corso 2025-26)
+% ============================================================
+\chapter{Introduzione al corso}
+\label{cap:introduzione}
+
+\section{Mutuazioni e struttura del corso}
+Il corso di Informatica Industriale (A.A.\ 2025/26, Prof.\ Luca Pazzi, DIEF UNIMORE) nasce dalla necessità di \textbf{armonizzare il curriculum informatico e quello meccanico} (mutuazioni 25/26), con i relativi problemi e opportunità.
+
+Il corso mira a fornire tre tipi di nozioni:
+\begin{enumerate}
+    \item \textbf{Conoscenza concettuale e tecnologica};
+    \item \textbf{Capacità applicative};
+    \item \textbf{Programmazione} (parte pratica, tramite esercitazioni).
+\end{enumerate}
+
+\subsection{Conoscenza concettuale e tecnologica}
+\begin{itemize}
+    \item Paradigma di \textbf{Industry 4.0} (verso 5.0) e \textbf{Cyber Physical Systems} per il miglioramento di prodotti e processi;
+    \item \textbf{Robotica collaborativa} e \textbf{Internet of Things} applicati alla manifattura avanzata;
+    \item Tecnologie informatiche correlate;
+    \item \textbf{Ingegneria del software} applicata al ciclo produttivo;
+    \item Nozioni di sicurezza ed efficacia (\emph{safety} \& \emph{liveness}) nei sistemi di produzione;
+    \item Standard internazionali nel settore della sicurezza applicati alla manifattura avanzata.
+\end{itemize}
+
+\subsection{Capacità applicative}
+\begin{itemize}
+    \item Progettare le funzioni di un sistema di manifattura avanzata;
+    \item Utilizzare metodologie e standard (\textbf{IEC 61508}, \textbf{ISO 15066}) per quantificare i rischi e gestire guasti in sistemi distribuiti;
+    \item Verificare la conformità dei progetti agli standard internazionali;
+    \item Integrare l'\emph{heritage} aziendale con le nuove tecnologie e programmare sistemi IoT per la manifattura avanzata.
+\end{itemize}
+
+\subsection{Programmazione (parte pratica)}
+\begin{itemize}
+    \item Programmazione di \textbf{PLC} attraverso i linguaggi standard \textbf{IEC 61131-3};
+    \item \textbf{Modellazione a stati finiti};
+    \item Implementazione della \textbf{modularità} dei sistemi di controllo;
+    \item Distribuzione di autonomia e controllo a differenti livelli di complessità attraverso gli \textbf{Statecharts Parte-Intero} (\emph{PW-Statecharts});
+    \item Progettazione e programmazione «corretta per costruzione» di sistemi che rispettano predicati di sicurezza e di efficacia.
+\end{itemize}
+
+\begin{note}[Svolgimento ed esame]
+Lezioni: lunedì 13--16 e venerdì 10--12. L'esame comprende una \textbf{parte scritta} di progettazione e programmazione IEC 61131-3 e un \textbf{orale} sulle nozioni apprese durante il corso.
+\end{note}
+
+\section{Industry 4.0 e Industry 5.0}
+\begin{defn}[Industry 4.0]
+Paradigma di manifattura avanzata: tendenza dell'automazione industriale che integra nuove tecnologie produttive per migliorare le condizioni di lavoro e aumentare la produttività e la qualità produttiva degli impianti.
+\end{defn}
+
+\textbf{Industry 5.0} è un'evoluzione del paradigma 4.0 con enfasi su:
+\begin{itemize}
+    \item \textbf{Collaborazione uomo-macchina}: non solo automazione e digitalizzazione, ma interazione più stretta tra operatori umani e sistemi intelligenti;
+    \item \textbf{Sostenibilità e resilienza}: robustezza e continuità operativa; ridondanza e modalità degradate (\emph{graceful degradation}).
+\end{itemize}
+
+Le principali caratteristiche della collaborazione uomo-macchina sono:
+\begin{enumerate}
+    \item Cobots (robot collaborativi);
+    \item Intelligenza Artificiale a supporto delle decisioni e della progettazione;
+    \item Interfacce Uomo-Macchina (HMI) avanzate;
+    \item Biosensori e sistemi adattivi;
+    \item Personalizzazione dei processi produttivi.
+\end{enumerate}
+
+\section{Intelligenza artificiale in ambito industriale}
+\subsection{Manutenzione predittiva}
+L'IA sta rivoluzionando la manutenzione industriale, passando da approcci \textbf{reattivi} a strategie \textbf{proattive} come la \textbf{manutenzione predittiva}, che sfrutta algoritmi di Machine Learning e analisi avanzate per prevedere guasti e ottimizzare le operazioni.
+
+\begin{defn}[Machine Learning]
+Branca dell'IA che consente ai computer di apprendere dai dati e migliorare le proprie prestazioni in compiti specifici senza essere esplicitamente programmati, tramite algoritmi capaci di identificare pattern nei dati e fare previsioni o decisioni basate su di essi.
+\end{defn}
+
+\subsection{Tipi di apprendimento nel Machine Learning}
+\begin{itemize}
+    \item \textbf{Apprendimento supervisionato}: l'algoritmo è addestrato con un dataset etichettato (ogni input associato a un output desiderato); obiettivo: prevedere l'output corretto per nuovi input. Esempi: classificazione email spam/non spam, previsione prezzi immobiliari.
+    \item \textbf{Apprendimento non supervisionato}: l'algoritmo analizza dati non etichettati per identificare pattern nascosti o strutture intrinseche. Esempio: \emph{clustering}, segmentazione dei clienti per comportamenti d'acquisto.
+    \item \textbf{Apprendimento per rinforzo}: l'algoritmo interagisce con un ambiente dinamico e apprende tramite ricompense e punizioni. Esempio: giochi, dove l'agente impara strategie ottimali per tentativi ed errori.
+\end{itemize}
+
+\subsection{Ruolo degli LLM in Industry 5.0}
+I \textbf{Large Language Models} (LLM) sono sistemi di IA addestrati su enormi quantità di dati testuali, in grado di comprendere e generare linguaggio naturale. In Industry 5.0 svolgono un ruolo cruciale in:
+\begin{enumerate}
+    \item \textbf{Interfacce linguistiche naturali};
+    \item \textbf{Generazione di codice di controllo};
+    \item \textbf{Analisi avanzata dei dati}.
+\end{enumerate}
+
+Per la generazione di codice di controllo per l'automazione, gli LLM possono essere addestrati su linguaggi specifici di settore, generando configurazioni e script complessi da descrizioni in linguaggio naturale: specifica incrementale da parte umana seguita da controllo e verifica di sicurezza (che richiede un paradigma di progettazione e programmazione adatto).
+
+\begin{note}[Vantaggi e sfide degli LLM per i PLC]
+\textbf{Vantaggi:} aumento della produttività (automazione di compiti ripetitivi), riduzione degli errori (codice conforme alle best practice), aggiornamento continuo, efficienza e accessibilità (anche professionisti con competenze limitate possono sviluppare sistemi di controllo).\\
+\textbf{Sfide:} garantire che il codice generato sia non solo sintatticamente corretto ma anche \textbf{funzionalmente sicuro} per l'applicazione specifica; serve un processo iterativo con verifiche semiautomatiche e feedback umano per validare il codice prodotto.
+\end{note}
+
+\section{Sistemi di controllo industriale e PLC}
+\subsection{Caratteristiche di un sistema di controllo industriale}
+Un sistema di controllo industriale non si limita a reagire immediatamente a uno stimolo, ma deve garantire che l'intero processo funzioni in modo stabile e ottimale. Deve:
+\begin{itemize}
+    \item \textbf{Monitorare costantemente il mondo reale}: raccogliere dati in tempo reale dai sensori, confrontare i valori misurati con i riferimenti, individuare discrepanze;
+    \item \textbf{Agire in feedback}: inviare comandi agli attuatori per correggere il processo;
+    \item \textbf{Garantire sicurezza e affidabilità}: prevenire malfunzionamenti e situazioni di rischio.
+\end{itemize}
+
+\subsection{Prima generazione: relè e cablaggi complessi}
+\begin{itemize}
+    \item \textbf{Origini}: negli anni '50--'60 la logica di controllo era implementata con \textbf{relè elettromeccanici} (poi elettronici, a transistor), attivati da correnti elettriche;
+    \item \textbf{Cablaggio complesso}: la logica (AND, OR, NOT, ecc.) era realizzata con un intricato sistema di cablaggi, un «puzzle elettrico» estremamente complesso nei sistemi grandi;
+    \item \textbf{Limitazioni}: manutenzione e modifica difficoltose (bassa flessibilità); errori di cablaggio o guasti a un singolo relè potevano compromettere l'intero sistema.
+\end{itemize}
+
+Dalle logiche a relè alle logiche a transistor l'obiettivo resta lo stesso: realizzare logica discreta per comandare attuatori a partire da sensori (sequenze, interlock, consenso). Le analogie sono:
+\begin{itemize}
+    \item \emph{Unità logica}: relè (bobina + contatti NO/NC) $\leftrightarrow$ transistor (ingresso + dispositivo di commutazione ON/OFF);
+    \item \emph{Composizione logica}: serie/parallelo $\leftrightarrow$ AND/OR; contatto NC $\leftrightarrow$ NOT; autoritenuta (latch) $\leftrightarrow$ memoria bistabile/flip-flop;
+    \item \emph{Differenza chiave}: il transistor rende la logica più veloce, compatta e affidabile (meno parti meccaniche), ma la struttura funzionale resta la stessa.
+\end{itemize}
+
+\begin{defn}[Interlock]
+Vincolo di interblocco (un «consenso») che impedisce l'attivazione di una funzione o azione finché non sono vere alcune condizioni di sicurezza o di corretto funzionamento. È una protezione logica che evita comandi incompatibili o pericolosi.
+\end{defn}
+
+L'interlock serve, in automazione, a:
+\begin{itemize}
+    \item prevenire azioni fisicamente incompatibili (due attuatori che si ostacolano);
+    \item prevenire azioni pericolose (moto con protezioni aperte, presenza operatore, pressione non ok);
+    \item garantire una sequenza corretta (non avviare il ciclo se manca il pezzo, se non si è in home, ecc.).
+\end{itemize}
+
+\begin{note}[Tipi di interlock]
+\begin{itemize}
+    \item \textbf{Safety interlock} (sicurezza): blocca per proteggere persone/impianto. Esempi: «porta aperta $\Rightarrow$ motori disabilitati»; «operatore in area $\Rightarrow$ robot a velocità ridotta o stop».
+    \item \textbf{Process interlock} (logico/di processo): blocca per evitare errori di processo o danni alla macchina. Esempi: «non avviare la pressa se il pezzo non è in posizione»; «non chiudere la pinza senza consenso dal sensore».
+    \item \textbf{Mutual interlock} (mutuo interblocco): impedisce due comandi simultanei incompatibili. Esempio: «valvola A e valvola B non possono essere aperte insieme».
+\end{itemize}
+\end{note}
+
+\subsection{PLC: nascita ed evoluzione}
+I \textbf{Controllori Logici Programmabili} (PLC) nascono alla fine degli anni '60 come risposta alle esigenze di automazione industriale (soprattutto industria automobilistica), per sostituire i sistemi a relè e cablaggi complessi, semplificando e rendendo più flessibile il controllo dei processi. Si sono poi evoluti in potenza di calcolo, interfacce di comunicazione e capacità di integrazione, conformandosi allo standard \textbf{IEC 61131-3}. Oggi sono fondamentali per affidabilità, flessibilità e capacità di gestire processi complessi in tempo reale.
+
+\subsection{La programmazione dei PLC prima dell'IEC 61131-3}
+\begin{enumerate}
+    \item \textbf{Logica a relè (ladder diagram)}: diagrammi a contatti che replicavano il cablaggio dei relè, facilitando la transizione ma mantenendo i problemi di fondo: \emph{complessità} $\leftrightarrow$ \emph{errori} $\leftrightarrow$ \emph{pericolo};
+    \item \textbf{Linguaggi proprietari}: sintassi e ambienti specifici per produttore, codice non portabile;
+    \item \textbf{Approccio hardware-centric}: software strettamente legato alla configurazione hardware;
+    \item \textbf{Interoperabilità limitata}: difficoltà nell'integrazione di sistemi multi-PLC;
+    \item \textbf{Strumenti di sviluppo specifici}: poco intuitivi e con funzionalità limitate;
+    \item \textbf{Scarsa riutilizzabilità}: mancanza di astrazioni comuni.
+\end{enumerate}
+
+\subsection{La norma IEC 61131-3: vantaggi}
+\begin{itemize}
+    \item \textbf{Standardizzazione}: unifica i linguaggi tra diversi PLC;
+    \item \textbf{Portabilità}: riuso e migrazione del codice tra sistemi di produttori diversi;
+    \item \textbf{Flessibilità}: supporta vari paradigmi (LD, FBD, IL, ST, SFC), grafici e testuali;
+    \item \textbf{Manutenzione}: migliora debugging e gestione del ciclo di vita;
+    \item \textbf{Interoperabilità}: agevola l'integrazione con altri sistemi industriali.
+\end{itemize}
+
+\begin{note}[I cinque linguaggi IEC 61131-3]
+\textbf{Linguaggi grafici:}
+\begin{itemize}
+    \item \textbf{Ladder Diagram (LD)} (KOP in ambiente Siemens): rappresenta graficamente circuiti elettrici con contatti e bobine; intuitivo per chi ha esperienza in elettrotecnica;
+    \item \textbf{Function Block Diagram (FBD)}: blocchi funzionali per operazioni logiche e aritmetiche, visione modulare; intuitivo per chi ha esperienza in elettronica;
+    \item \textbf{Sequential Function Chart (SFC)}: suddivide il processo in passi e transizioni, ideale per sequenze operative complesse; abbastanza intuitivo per chi ha esperienza in informatica.
+\end{itemize}
+\textbf{Linguaggi testuali:}
+\begin{itemize}
+    \item \textbf{Instruction List (IL)} (AWL in ambiente Siemens): simile ad assembly, mnemonico, a basso livello; poco intuitivo per tutti;
+    \item \textbf{Structured Text (ST)}: sintassi simile a Pascal o C; intuitivo per chi ha esperienza informatica, ma il meccanismo operativo è totalmente differente da quello di un PC.
+\end{itemize}
+\end{note}
+
+\begin{note}[Svantaggi dell'IL]
+Sintassi di basso livello (difficoltà di lettura e comprensione), manutenzione complessa (soprattutto in team o passaggi di consegne), tracciamento degli errori laborioso a causa della natura lineare e a basso livello del codice.
+\end{note}
+
+\section{Ingegneria del software nella programmazione dei PLC}
+\begin{itemize}
+    \item I linguaggi a basso livello (IL) sono meno leggibili; quelli di alto livello (ST) migliorano leggibilità e manutenibilità (es.\ storico: Margaret Hamilton e i listati assembly del software di controllo del modulo Apollo);
+    \item \textbf{Scalabilità}: ST offre modularità e organizzazione del codice per progetti grandi, con moduli indipendenti per facilitare manutenzione, riuso ed evoluzione locale senza impattare globalmente l'architettura;
+    \item \textbf{Attenzione all'equivoco}: nella programmazione tradizionale (C, Pascal) la modularità si concentra sulle \emph{funzioni del software}; nei PLC la modularità deve concentrarsi sulla rappresentazione del \textbf{comportamento (behavior) dei dispositivi}.
+\end{itemize}
+
+\begin{intuition}[Dominare la complessità]
+La progettazione modulare agisce come antidoto alla complessità: isolando le funzionalità in unità indipendenti si limita la propagazione della complessità globale. Ogni modulo, pur complesso internamente, è trattato come «scatola nera» ben definita: si riducono le interdipendenze e si facilitano manutenzione, debugging ed evoluzione.
+\end{intuition}
+
+\begin{note}[Modularità in sistemi real-time e PLC]
+Il problema principale è la gestione di comunicazione e sincronizzazione tra moduli: una modularità mal progettata porta a interdipendenze non evidenti. Assicurare scambio affidabile e tempestivo di dati ed eventi richiede meccanismi di coordinamento sofisticati e un modello chiaro di interazione. \emph{La modularità dipende dal modello e dal linguaggio di programmazione.}
+\end{note}
+
+Il modello funzionale strutturato (ST) da solo non basta per sistemi real-time: in molti sistemi RT si usano \textbf{macchine a stati finiti} per gestire eventi e transizioni assicurando risposta deterministica. La domanda chiave del corso: \emph{come far convivere aspetti RT e modularità?}
+
+\subsection{FSM e modularità}
+Il modello a stati finiti è una scelta naturale per applicazioni real-time e PLC industriali: mappa il sistema in stati distinti e transizioni, offrendo una rappresentazione intuitiva dei processi dinamici; in ambito industriale è uno strumento \textbf{ontologico} per descrivere la dinamica dei sistemi.
+
+\begin{note}[Punti di forza e sfide delle FSM]
+\textbf{Punti di forza:} rappresentazione naturale della dinamica (transizioni ben definite, es.\ da stato operativo a stato di emergenza); chiarezza concettuale (regole di transizione esplicite, verifica della correttezza logica agevolata).\\
+\textbf{Sfide di modularizzazione:} scalabilità e complessità (i diagrammi diventano ingestibili cresciendo); interconnessione tra moduli (sincronizzazione di stati e transizioni richiede meccanismi ben definiti); gestione della concorrenza (transizioni deterministiche e non conflittuali).
+\end{note}
+
+\section{Robotica collaborativa (anteprima)}
+A differenza dei robot industriali tradizionali, che operano separati dagli esseri umani per motivi di sicurezza, i \textbf{cobot} lavorano a fianco degli operatori e sono progettati per adattarsi in tempo reale alle azioni umane, rendendo la produzione più flessibile ed efficiente (trattati in dettaglio nel Capitolo~\ref{cap:cobots}).
+
+\section{Analisi del pericolo e sua mitigazione}
+Le particolarità dei moderni sistemi di produzione pongono nuove sfide alla progettazione della sicurezza:
+\begin{itemize}
+    \item robot autonomi e collaborativi richiedono di ripensare gli strumenti tradizionali di \emph{safety analysis};
+    \item \textbf{affidabilità non implica sicurezza!}
+    \item occorre conoscere le nuove problematiche introdotte dai nuovi paradigmi produttivi, gli standard attuali e in rilascio, fare esercizi su casi reali e comprendere il ruolo del software nella sicurezza.
+\end{itemize}
+
+Un sistema di produzione complesso combina componenti con diverse strategie di fallimento: componenti singoli \emph{fail silent} o \emph{fail explicit}, dispositivi ridondanti con votazione dei sensori (\emph{fail operational}), gestione \emph{fail operational} e \emph{fail safe} a livello d'impianto (es.\ centrale nucleare). Queste categorie sono trattate nel Capitolo~\ref{cap:sicurezza-base}.
+
+\begin{note}[Bibliografia del corso]
+Kopetz, \emph{Real-Time Systems, Design Principles for Distributed Real-Time Applications}, Kluwer, 1997; Storey, \emph{Safety Critical Computer Systems}, Pearson Prentice Hall, 1996; Leveson, \emph{Engineering a Safer World}, MIT Press.
+\end{note}

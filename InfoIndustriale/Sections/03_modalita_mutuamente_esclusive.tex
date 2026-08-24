@@ -1,0 +1,64 @@
+% ============================================================
+% Capitolo 3 — Programmazione a modalità mutuamente esclusive
+% (Programmazione a modalità mutuamente esclusive.pdf)
+% ============================================================
+\chapter{Programmazione a modalità mutuamente esclusive}
+\label{cap:modalita-esclusive}
+
+\begin{note}[Origine]
+Appunti dell'esercitazione del 9 marzo 2026. Nota: il programma svolto in aula usa nomi differenti da quelli usati nelle slide.
+\end{note}
+
+\section{Idea generale}
+Nella programmazione a \textbf{task} è utile individuare \textbf{porzioni di codice che vengono eseguite in maniera mutuamente esclusiva}. Si usano \textbf{variabili booleane} per creare:
+\begin{itemize}
+    \item porzioni mutuamente esclusive nel codice (\textbf{stati});
+    \item segnali e condizioni che fanno saltare da una porzione all'altra (\textbf{eventi}).
+\end{itemize}
+
+Si usa il costrutto \texttt{IF THEN} associato a variabili booleane per creare tali porzioni. Una porzione contiene:
+\begin{itemize}
+    \item una o più \textbf{azioni};
+    \item una o più \textbf{transizioni}.
+\end{itemize}
+Una porzione di codice modella una \textbf{modalità}, o meglio uno \textbf{stato}.
+
+\section{Transizioni}
+\begin{defn}[Transizione]
+Una transizione:
+\begin{itemize}
+    \item è contenuta in una porzione di codice;
+    \item porta in un'altra porzione di codice;
+    \item è guidata da un \textbf{evento}, modellato attraverso un segnale booleano;
+    \item è racchiusa in un \texttt{IF THEN};
+    \item deve essere eseguita \textbf{una sola volta}: ciò si ottiene rendendo falso il segnale che modella l'evento alla conclusione dell'\texttt{IF} (\textbf{«consumare l'evento»}).
+\end{itemize}
+\end{defn}
+
+Una transizione può avvenire anche in «reazione» a una \textbf{condizione} che diventa vera (senza eventi): ad esempio si salta alla modalità «indietro» se l'indice \texttt{i} ha raggiunto un certo limite.
+
+\section{Esempio: due modalità con contatore}
+Programma con due modalità in cui un contatore viene incrementato o decrementato. Si passa da una modalità all'altra se (in alternativa):
+\begin{itemize}
+    \item il contatore ha superato un limite negativo o positivo ($-1000$, $1000$);
+    \item un evento \texttt{step} viene inviato attraverso un button (pulsante) nella parte grafica.
+\end{itemize}
+
+Dichiarazione delle variabili:
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+PROGRAM PLC_PRG
+VAR
+    i : INT := 0;
+    //--- Modalita' oppure STATI
+    avanti : BOOL := TRUE;
+    indietro : BOOL := FALSE;
+    //--- Evento
+    step : BOOL := FALSE;
+END_VAR
+\end{lstlisting}
+
+Le variabili booleane \texttt{avanti} e \texttt{indietro} rappresentano gli \textbf{stati} (modalità) ed è garantito che siano sempre mutuamente esclusivi (uno \texttt{TRUE} e l'altro \texttt{FALSE}); \texttt{step} è l'\textbf{evento} esterno che forza il cambio di modalità indipendentemente dal valore del contatore.
+
+\begin{intuition}[Perché questo pattern è importante]
+Questo schema (stati = porzioni di codice mutuamente esclusive, transizioni guidate da eventi o condizioni) è la traduzione diretta in ST di una \textbf{macchina a stati}: è il ponte tra il formalismo a stati finiti (Capitoli~\ref{cap:formalismi-1} e~\ref{cap:formalismi-2}) e la programmazione concreta dei PLC, e sarà riutilizzato in tutti i casi di studio successivi (timer, stati temporizzati, funzioni di sicurezza).
+\end{intuition}

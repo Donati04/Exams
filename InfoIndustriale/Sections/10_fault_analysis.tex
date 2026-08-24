@@ -1,0 +1,176 @@
+% ============================================================
+% Capitolo 10 — Fault Analysis: FMEA e FTA (Fault Analisys 2025-26.pdf)
+% ============================================================
+\chapter{Affidabilità, sicurezza e Fault Analysis: FMEA e FTA}
+\label{cap:fault-analysis}
+
+\section{Fault, Error e Failure: definizioni e differenze}
+Nel contesto dell'affidabilità dei sistemi, i termini \emph{fault}, \emph{error} e \emph{failure} descrivono concetti distinti lungo la \textbf{catena causale} di un malfunzionamento. Attenzione: i termini possono denotare concetti differenti in standard di sicurezza differenti (qui si seguono IEC 60050 e IEC 61508).
+
+\begin{defn}[Fault — guasto o difetto]
+Difetto o malfunzionamento \textbf{interno a un componente} del sistema (hardware o software). È lo stato di un componente quando ha cessato di funzionare correttamente o contiene un difetto latente. Esempi: cortocircuito in un circuito elettrico, transistor fisicamente rotto, bug nel codice di un software (difetto di programmazione).
+\end{defn}
+
+\begin{defn}[Error — errore]
+\textbf{Deviazione dallo stato o comportamento atteso} del sistema, causata tipicamente dall'attivazione di un fault. È una condizione anomala all'interno del sistema (per esempio un valore di calcolo errato in un software, o un sensore che fornisce una lettura sbagliata) risultante da un fault attivo. Importante: un fault può rimanere \textbf{latente} senza generare immediatamente errori, finché non viene attivato in condizioni particolari.
+\end{defn}
+
+\begin{defn}[Failure — mancata funzionamento, avaria]
+\textbf{Incapacità del sistema di svolgere la funzione richiesta} o di rispettare i requisiti specificati. La failure è osservabile a livello di sistema (al suo confine esterno) ed è l'evento finale in cui il comportamento erogato non corrisponde a quello previsto. Si manifesta quando un errore non viene gestito appropriatamente e provoca un malfunzionamento visibile all'utente o all'ambiente operativo.
+\end{defn}
+
+\subsection{Catena Fault--Error--Failure}
+Un \textbf{fault} attivo può provocare uno o più \textbf{error}, i quali a loro volta possono propagarsi e causare una \textbf{failure} del sistema:
+\begin{center}
+fault (causa radice) $\longrightarrow$ error (stato incorretto) $\longrightarrow$ failure (effetto finale osservabile)
+\end{center}
+La failure è l'effetto finale osservabile (ad esempio l'interruzione di servizio o un incidente).
+
+\begin{intuition}[Failure come proprietà sistemica emergente]
+Non tutti i fault portano necessariamente a una failure: un sistema con ridondanza può tollerare un guasto senza esibire errori visibili (il fault resta nascosto o latente e il sistema funziona grazie ai meccanismi di backup). Viceversa, non tutte le failure sono dovute a un fault hardware attivo: il sistema può fallire anche senza componenti guasti, per un requisito errato di progettazione o una condizione non prevista. La failure è quindi una \textbf{proprietà sistemica emergente}: un sistema può «funzionare male» anche se ogni singolo componente funziona secondo specifica, quando la combinazione di componenti, ambiente operativo e input porta a un comportamento non sicuro.
+\end{intuition}
+
+\subsection{Esempi nei vari ambiti}
+\begin{ex}[Ambito industriale]
+In una linea di produzione automatizzata, un \textbf{fault} è la rottura di un sensore di prossimità su un nastro trasportatore (guasto hardware interno). Finché il pezzo è correttamente rilevato da un sensore ridondante, il sistema non mostra anomalie: il fault rimane latente. In assenza di ridondanza, quando un oggetto non viene rilevato dal sensore guasto, il sistema entra in uno stato incoerente (\textbf{error}): il PLC non «vede» il pezzo presente quando invece c'è. L'errore può propagarsi causando una \textbf{failure}: la macchina non esegue la lavorazione sul pezzo (funzione richiesta mancata) e la linea si ferma con blocco produttivo.
+\end{ex}
+
+\begin{ex}[Ambito informatico/software]
+In un software gestionale, un \textbf{fault} è un bug nel codice (difetto di programmazione). Resta latente se la porzione di codice difettosa non viene eseguita; quando il programma esegue quella funzione, il bug si attiva generando un calcolo errato (es.\ overflow o risultato logicamente sbagliato): è l'\textbf{error} (stato interno incorretto). Se l'errore non viene intercettato, porta a una \textbf{failure} visibile: terminazione anomala oppure output sbagliato all'utente. In sintesi: fault = bug nel codice; error = stato inconsistente (variabile fuori range); failure = il software non svolge il servizio atteso (report con dati errati o crash).
+\end{ex}
+
+\begin{ex}[Ambito aerospaziale]
+Un \textbf{fault} possibile è il guasto di un altimetro radar di un aeromobile. Questo fault hardware provoca un \textbf{error} nei dati di quota inviati al computer di volo (altitudine letta sballata di parecchi metri). Se l'aereo dispone di un sistema di votazione tripla (tripla ridondanza, Capitolo~\ref{cap:sicurezza-base}), l'errore può essere mascherato confrontando le tre misure e scartando quella anomala; in caso contrario può condurre a una \textbf{failure} grave: il pilota automatico potrebbe mantenere una quota errata.
+\end{ex}
+
+Altri scenari simili:
+\begin{itemize}
+    \item \textbf{Automotive}: fault = cedimento di un tubo dei freni (guasto meccanico) $\to$ error = pressione idraulica nulla $\to$ failure = perdita della capacità frenante;
+    \item \textbf{Sanitario}: fault = malfunzionamento di una pompa di infusione $\to$ error = dosaggio errato del farmaco $\to$ failure = rischio per il paziente.
+\end{itemize}
+
+\section{Relazione tra Affidabilità e Sicurezza}
+Affidabilità e sicurezza sono due proprietà chiave, strettamente correlate ma \textbf{non equivalenti}:
+\begin{itemize}
+    \item \textbf{Affidabilità (reliability)}: probabilità che un sistema compia la funzione prevista \emph{senza guasti} per un intervallo di tempo definito e in date condizioni operative;
+    \item \textbf{Sicurezza (safety)}: proprietà di un sistema di \emph{non causare danni inaccettabili} a persone, beni o ambiente; spesso definita come «libertà dal rischio inaccettabile di danni».
+\end{itemize}
+
+\subsection{Differenze concettuali}
+\begin{itemize}
+    \item L'affidabilità riguarda la \textbf{continuità di servizio} e l'assenza di failure \emph{tout-court};
+    \item la sicurezza si concentra sull'\textbf{assenza di conseguenze catastrofiche o pericolose};
+    \item un sistema affidabile funziona senza guasti frequenti; un sistema sicuro evita situazioni di pericolo \emph{anche in presenza di guasti}.
+\end{itemize}
+
+\subsection{Conseguenze}
+\begin{itemize}
+    \item Un sistema può essere molto affidabile ma \textbf{non sicuro};
+    \item al contrario, un sistema può essere molto sicuro ma \textbf{non particolarmente affidabile}.
+\end{itemize}
+
+\begin{ex}[Macchinario molto sicuro ma poco affidabile]
+Si consideri un macchinario industriale dotato di interblocchi e arresti di emergenza estremamente cautelativi: ogni minima anomalia fa scattare un arresto immediato (fail-safe), prevenendo il rischio di infortuni. Il macchinario è \emph{sicuro}, perché in presenza di potenziali problemi si ferma in modalità sicura. Tuttavia i frequenti fermi lo rendono poco disponibile e affidabile dal punto di vista produttivo (bassa continuità di servizio): la sicurezza è garantita a scapito dell'affidabilità operativa.
+\end{ex}
+
+\begin{note}[In sintesi]
+L'affidabilità mira all'assenza di guasti in generale; la sicurezza mira all'assenza di conseguenze inaccettabili. Un progetto ben fatto deve perseguire \textbf{entrambe}: sistema funzionante in modo continuo e, se avvengono guasti, senza mettere in pericolo persone o obiettivi fondamentali.
+\end{note}
+
+\section{Analisi dei guasti: FMEA e FTA}
+Per gestire e migliorare sia l'affidabilità che la sicurezza, l'ingegneria si avvale di metodologie analitiche strutturate. Le due più diffuse:
+\begin{itemize}
+    \item \textbf{FMEA} (Failure Mode and Effects Analysis): approccio \textbf{bottom-up} (induttivo);
+    \item \textbf{FTA} (Fault Tree Analysis): approccio \textbf{top-down} (deduttivo).
+\end{itemize}
+Nate in ambiti industriali diversi, oggi fanno parte delle best practice in molti settori, con standard dedicati (IEC 60812 per FMEA, IEC 61025 per FTA).
+
+\subsection{FMEA — Failure Modes and Effects Analysis}
+\begin{defn}[FMEA]
+Tecnica di analisi \textbf{induttiva, dal basso verso l'alto}: si esaminano sistematicamente i potenziali \textbf{modi di guasto} (\emph{failure modes}) di ciascun componente o sottosistema e si valutano gli \textbf{effetti} di tali guasti sul sistema complessivo. Obiettivo: identificare cosa potrebbe andare storto in ogni parte del sistema, comprendere le conseguenze di ogni guasto e classificare i guasti in base alla \textbf{criticità}, per mitigare i rischi prima che si manifestino.
+\end{defn}
+In pratica la FMEA aiuta i progettisti a chiedersi: «qual è ogni possibile modo in cui ogni elemento può guastarsi, e cosa succede al sistema se ciò accade?».
+
+\begin{note}[Limitazioni e best practice della FMEA]
+\begin{itemize}
+    \item È focalizzata su \textbf{guasti singoli}: non considera facilmente eventi combinati o cascata di guasti simultanei;
+    \item può richiedere un enorme \textbf{sforzo documentale}: si analizzano anche guasti con probabilità remota o effetti trascurabili, investendo tempo su aspetti non critici;
+    \item best practice: applicare la FMEA in modo \textbf{mirato ai sottosistemi critici}, magari integrandola con altre analisi.
+\end{itemize}
+\end{note}
+
+\subsection{FTA — Fault Tree Analysis}
+\begin{defn}[FTA]
+Tecnica complementare alla FMEA, con approccio \textbf{deduttivo dall'alto verso il basso} (\emph{top-down}). Invece di partire dai componenti, parte da un \textbf{evento indesiderato apicale} (\emph{top event}) — tipicamente una failure o un incidente — e \textbf{risale} alle possibili cause prime attraverso un diagramma logico ad albero.
+\end{defn}
+
+Come si esegue una FTA:
+\begin{itemize}
+    \item si costruisce un albero dei guasti in cui il \textbf{nodo radice} è il problema da evitare (es.\ «pericolo di incendio in macchina X» o «perdita totale di potenza») e i \textbf{rami} rappresentano combinazioni di eventi di guasto che possono condurre al top event;
+    \item si utilizzano \textbf{operatori logici}:
+    \begin{itemize}
+        \item porte \textbf{OR} (alternative): eventi che \emph{individualmente} possono causare l'evento superiore;
+        \item porte \textbf{AND} (concomitanza): condizioni che devono verificarsi \emph{tutte insieme} perché avvenga l'evento superiore;
+    \end{itemize}
+    \item il risultato è un modello grafico che descrive tutte le combinazioni di guasti di base che portano alla failure considerata.
+\end{itemize}
+
+\subsection{Esempio ed esercizio: laser industriale con interblocco}
+\begin{ex}[Sistema laser]
+Sistema laser controllato da un computer attraverso un attuatore di potenza (\emph{power driver}), che può essere attivato solo se un dispositivo di protezione (\emph{copertura}) viene chiuso. \textbf{Evento pericoloso}: il laser si attiva a copertura alzata.
+\end{ex}
+
+Possibile albero di guasto:
+\begin{itemize}
+    \item \textbf{Top Event}: «Il laser si attiva con la protezione aperta»;
+    \item causa immediata: «mancata rilevazione della protezione aperta» \textbf{AND} «comando inavvertito di accensione laser» — entrambe \emph{necessarie} per il pericolo (porta AND);
+    \item «mancata rilevazione protezione» può derivare da un \textbf{OR} di: sensore di posizione guasto OR errore umano (interruttore bypassato);
+    \item «comando inavvertito» può derivare da: guasto al controller OR errore software.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\begin{forest}
+  for tree={
+    draw, align=center, font=\footnotesize,
+    edge={->},
+    l sep=1.1cm, s sep=0.5cm
+  }
+  [\textbf{TE}: laser attivo\\a protezione aperta
+    [Mancata rilevazione\\protezione aperta, edge label={node[midway, left, font=\scriptsize]{AND}}]
+    [Comando inavvertito\\accensione laser, edge label={node[midway, right, font=\scriptsize]{AND}}]
+  ]
+\end{forest}
+
+\vspace{0.5cm}
+\begin{forest}
+  for tree={
+    draw, align=center, font=\footnotesize,
+    edge={->},
+    l sep=1.1cm, s sep=0.6cm
+  }
+  [Mancata rilevazione\\protezione aperta
+    [Sensore di posizione\\guasto, edge label={node[midway, left, font=\scriptsize]{OR}}]
+    [Errore umano: interruttore\\bypassato, edge label={node[midway, right, font=\scriptsize]{OR}}]
+  ]
+\end{forest}
+
+\vspace{0.5cm}
+\begin{forest}
+  for tree={
+    draw, align=center, font=\footnotesize,
+    edge={->},
+    l sep=1.1cm, s sep=0.6cm
+  }
+  [Comando inavvertito\\accensione laser
+    [Guasto al controller, edge label={node[midway, left, font=\scriptsize]{OR}}]
+    [Errore software, edge label={node[midway, right, font=\scriptsize]{OR}}]
+  ]
+\end{forest}
+\caption{FTA per il sistema laser: il top event richiede \emph{entrambe} le cause immediate (porta AND); ciascuna può derivare da alternative indipendenti (porte OR). L'albero evidenzia che per avere il laser acceso a protezione aperta occorre sia il guasto/errore sul sensore sia un comando di attivazione errato, simultaneamente.}
+\label{fig:fta-laser}
+\end{figure}
+
+\begin{note}[Bibliografia]
+Kopetz H., \emph{Real-Time Systems}, Kluwer, 1997; Storey N., \emph{Safety Critical Computer Systems}, Pearson Prentice Hall, 1996; Leveson N.G., \emph{Engineering a Safer World}, MIT Press.
+\end{note}

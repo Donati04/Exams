@@ -1,0 +1,79 @@
+% ============================================================
+% Capitolo 7 — Simulazione di un componente con transizioni autonome
+% (Simulazione transizioni autonome.pdf)
+% ============================================================
+\chapter{Simulazione di un componente con transizioni autonome}
+\label{cap:transizioni-autonome}
+
+\section{Note preliminari}
+\begin{itemize}
+    \item Un controller \textbf{PWs} (\emph{Part-Whole system}, Capitolo~\ref{cap:formalismi-2}) interagisce con un certo numero di \textbf{interfacce di componenti} raccolte in un \textbf{assembly};
+    \item \textbf{Interfaccia}: descrive \emph{solo} i cambiamenti di stato del componente, siano essi comandati attraverso \textbf{trigger} oppure attraverso \textbf{transizioni autonome};
+    \item Le transizioni autonome riflettono sia cambiamenti nell'\textbf{ambiente}, sia cambiamenti che derivano dall'\textbf{implementazione}.
+\end{itemize}
+
+\section{Esempio: la Cover}
+In generale un dispositivo può \textbf{nascere in più di uno stato}. La \emph{cover} (coperchio) nasce per esempio sia nello stato \texttt{Up} sia nello stato \texttt{Down}: ciò deriva dal fatto che, nel momento in cui il controller a cui è collegata comincia a funzionare, la cover può essere già aperta o chiusa.
+
+La cover può muoversi dallo stato \texttt{Up} allo stato \texttt{Down} e viceversa \textbf{in ogni momento}: ciò deriva dal fatto che la cover può essere aperta o chiusa manualmente (interazione con l'ambiente). È in realtà un \textbf{sensore}!
+
+\begin{note}[Semplificazione didattica]
+Per semplificare la simulazione a fini didattici verranno usati solo dispositivi con un \textbf{solo stato iniziale}. In questo caso si immagina che la Cover sia inizialmente chiusa (\texttt{Down}), ad esempio tramite una molla che la tiene abbassata.
+\end{note}
+
+\section{Modellazione}
+Si dichiarano variabili di input usate come \textbf{trigger ad uso esclusivo della simulazione}, usando nomi difficilmente confondibili con quelli reali del device:
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+// ------------- FB Cover -------------
+FUNCTION_BLOCK Cover
+VAR_INPUT
+  sim_event_Up_Down : BOOL := FALSE; (* simulation event Up->Down *)
+  sim_event_Down_Up : BOOL := FALSE; (* simulation event Down->Up *)
+END_VAR
+VAR_OUTPUT
+  stato : Stati_Cover := Stati_Cover.Init;
+END_VAR
+\end{lstlisting}
+
+Implementazione come macchina a stati con \texttt{CASE OF} (transizioni guidate dagli eventi di simulazione, con «consumo» dell'evento):
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+CASE stato OF
+  Stati_Cover.Init:
+    stato := Stati_Cover.Down;
+
+  Stati_Cover.Up:
+    IF sim_event_Up_Down THEN
+      stato := Stati_Cover.Down;
+      sim_event_Up_Down := FALSE;   (* consumo evento *)
+    END_IF;
+
+  Stati_Cover.Down:
+    IF sim_event_Down_Up THEN
+      stato := Stati_Cover.Up;
+      sim_event_Down_Up := FALSE;   (* consumo evento *)
+    END_IF;
+END_CASE
+\end{lstlisting}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=stealth, node distance=4.2cm, every node/.style={font=\small}]
+    \node[state, initial, draw] (init) {Init};
+    \node[state, draw, right of=init] (down) {Down};
+    \node[state, draw, right of=down] (up) {Up};
+
+    \draw[->] (init) edge[above] node {} (down);
+    \draw[->] (down) edge[bend left=30] node[above] {\texttt{sim\_event\_Down\_Up}} (up);
+    \draw[->] (up) edge[bend left=30] node[below] {\texttt{sim\_event\_Up\_Down}} (down);
+\end{tikzpicture}
+\caption{Automa del Function Block \texttt{Cover}: stato iniziale unico \texttt{Init} (semplificazione: molla che tiene la cover abbassata), poi transizioni comandate dagli eventi di simulazione.}
+\label{fig:cover-automaton}
+\end{figure}
+
+\begin{intuition}[Punti chiave]
+\begin{itemize}
+    \item Gli eventi di simulazione sono variabili \emph{distinte} da quelle del dispositivo reale (prefisso \texttt{sim\_}), così il codice di simulazione non si mescola con la logica reale;
+    \item dopo ogni transizione l'evento viene «consumato» (riportato a \texttt{FALSE}), secondo il pattern visto nel Capitolo~\ref{cap:modalita-esclusive};
+    \item nel sistema reale le transizioni della cover sarebbero \textbf{autonome} (scattano da sole, senza trigger del controller): nella simulazione vengono emulate con trigger dedicati.
+\end{itemize}
+\end{intuition}

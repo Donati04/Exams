@@ -1,0 +1,187 @@
+% ============================================================
+% Capitolo 11 — Normative sicurezza funzionale
+% (20260424 Normative sicurezza funzionale.pdf)
+% ============================================================
+\chapter{Normative sulla sicurezza funzionale nei sistemi di controllo}
+\label{cap:normative}
+
+\section{Obiettivo delle norme}
+Assegnare \textbf{parametri quantitativi} ai sistemi che assolvono funzioni di sicurezza non svolte dal sistema di controllo ordinario (analogia con il watchdog), per esempio:
+\begin{itemize}
+    \item Funzione di Arresto di Emergenza (E-Stop);
+    \item Funzione di Controllo Interblocco di un Riparo/Guardia;
+    \item Funzione di controllo operazione a due mani.
+\end{itemize}
+Attraverso tali parametri si stima la congruità e l'efficacia di un sistema di sicurezza in relazione a un caso d'uso dato, rendendo i risultati \textbf{verificabili} secondo metodologie stabilite da norme internazionali.
+
+\section{Terminologia}
+\begin{defn}[Sicurezza funzionale]
+Implementata da sistemi che \textbf{monitorano} e, in caso di situazioni pericolose, \textbf{assumono il controllo della macchina} al fine di garantire un funzionamento sicuro.
+\end{defn}
+
+\begin{defn}[SRCS — Safety-Related Control System]
+Sistema di controllo relativo alla sicurezza: implementa le funzioni di controllo relative alla sicurezza (\emph{SRCF}, Safety-Related Control Functions) rilevando le condizioni pericolose e portando il sistema sotto controllo in uno stato \textbf{fail safe}, garantendo che venga eseguita un'azione specifica.
+\end{defn}
+
+La norma \textbf{EN ISO 13849-1} definisce le parti di un sistema di controllo di una macchina che servono per realizzare le funzioni di sicurezza come \textbf{SRP/CS} (\emph{Safety-Related Parts of Control Systems}).
+
+\section{Le due norme: IEC 62061 e ISO 13849-1}
+\begin{itemize}
+    \item \textbf{IEC 62061} (deriva da IEC 61508): prescrive standard per sistemi tesi alla riduzione dei rischi in sistemi \textbf{E/E/EP} (elettrici, elettronici ed elettronici programmabili);
+    \item \textbf{ISO 13849-1}: norma soprattutto l'impiego, sia in ambito meccanico che idraulico e pneumatico, di componenti elettrici ed elettronici programmabili e lo sviluppo della meccatronica nell'ambito industriale.
+\end{itemize}
+Nota: ISO non è un acronimo (in inglese: International Organization for Standardization); deriva dal greco \emph{ìsos} che significa «uguale». Entrambi gli standard forniscono linee guida per l'implementazione della sicurezza funzionale.
+
+\section{Ruolo del controllo nella sicurezza funzionale}
+La distinzione fondamentale è tra:
+\begin{itemize}
+    \item \textbf{controllo ordinario}: governa il funzionamento della macchina (es.\ regola la velocità di un nastro trasportatore);
+    \item \textbf{controllo di sicurezza}: sorveglia le condizioni di rischio e interviene quando necessario (es.\ arresta il nastro se viene aperto un riparo mobile).
+\end{itemize}
+La sicurezza funzionale non è affidata alla sola logica di comando ordinaria, ma a funzioni e componenti \textbf{dedicati} alla sicurezza. Tali elementi possono essere \textbf{integrati} nel sistema di controllo oppure \textbf{separati} da esso, ma hanno sempre il compito di:
+\begin{enumerate}
+    \item rilevare condizioni pericolose;
+    \item prevalere sul controllo ordinario, se necessario;
+    \item condurre la macchina in uno stato sicuro (rimozione della coppia al motore, arresto del movimento, blocco del riavvio automatico).
+\end{enumerate}
+
+\begin{note}[PLC di sicurezza vs.\ relè di sicurezza]
+\textbf{PLC di sicurezza integrato nel sistema:} gestisce logiche di sicurezza complesse; si integra con il controllo della macchina; indicato per impianti articolati e funzioni multiple.\\
+\textbf{Relè di sicurezza dedicato:} realizza funzioni di sicurezza specifiche; struttura più semplice e meno flessibile; indicato per applicazioni con esigenze di sicurezza circoscritte.
+\end{note}
+
+\begin{intuition}[Perché non basta un PLC ordinario]
+Il controllo ordinario impedisce le situazioni pericolose \emph{previste dalla logica di esercizio}; la sicurezza funzionale interviene quando si verificano \textbf{guasti, anomalie o perdita del controllo corretto}. Non basta comandare correttamente la macchina: occorre garantire il raggiungimento di uno stato sicuro in caso di malfunzionamento. Esempio: in un incrocio semaforico la logica ordinaria evita il verde simultaneo su direttrici incompatibili; la sicurezza funzionale richiede che, in caso di guasto del controllo, il sistema si porti in uno stato fail safe.
+\end{intuition}
+
+\section{Principi generali nella riduzione del rischio}
+\begin{enumerate}
+    \item \textbf{Eliminare o minimizzare} ogni possibile rischio a partire dal progetto del dispositivo;
+    \item applicare le necessarie \textbf{misure di protezione} verso i pericoli che non possono essere eliminati (sicurezza funzionale);
+    \item \textbf{informare gli utenti} dei rischi che non possono essere eliminati nonostante tutte le misure protettive.
+\end{enumerate}
+
+\section{Guasto pericoloso e random fault}
+\begin{defn}[Guasto pericoloso (random fault)]
+«Guasto che pregiudichi la funzione di controllo relativa alla sicurezza (SRCF) come conseguenza di guasti hardware casuali». Un \emph{random fault} è un guasto casuale nel tempo, dovuto per esempio a: usura dei componenti, invecchiamento, variazioni fisiche o ambientali, difetti hardware che si manifestano durante l'esercizio. Non è un errore «voluto» o sistematico di progetto, ma un guasto che può comparire in modo \textbf{statisticamente descrivibile}.
+\end{defn}
+
+\begin{note}[Curva a vasca da bagno e vita utile]
+Il tasso di guasto $\lambda$ (numero di guasti per ora) rimane approssimativamente costante per un certo periodo di tempo $(T_u - T_a)$ detto \textbf{vita utile}. Il tempo $M$ è detto \textbf{vita media}. Un po' prima della fine della vita utile si sostituiscono preventivamente tutti i componenti, anche se ancora funzionanti. Esempio: il motore di un aereo da turismo viene sostituito o revisionato radicalmente attorno alle 1200 ore.
+\end{note}
+
+\section{Valutazione delle prestazioni delle funzioni di sicurezza}
+Le due norme adottano parametri diversi ma equivalenti nello spirito:
+\begin{center}
+\begin{tabular}{lll}
+\textbf{Norma} & \textbf{Parametro} & \textbf{Significato}\\
+\hline
+IEC 62061 & \textbf{SIL} (Safety Integrity Level) & Livello di integrità della sicurezza\\
+ISO 13849-1 & \textbf{PL} (Performance Level) & Livello di prestazione\\
+\end{tabular}
+\end{center}
+
+In entrambi i casi la valutazione quantitativa è espressa in \textbf{intervalli di probabilità} in cui si possono verificare guasti pericolosi in un'ora:
+\begin{itemize}
+    \item possono essere espressi equivalentemente in intervalli temporali in cui può avvenire un guasto pericoloso;
+    \item intervalli ampi indicano minor rischio di guasto pericoloso e viceversa;
+    \item le prestazioni devono essere \textbf{adeguate al caso in esame}: il caso riceve prima una valutazione \textbf{qualitativa} della prestazione di sicurezza \emph{richiesta}, a cui segue un progetto i cui parametri dovranno soddisfare quantitativamente tale valutazione (prestazione \emph{ottenuta}).
+\end{itemize}
+
+\subsection{Metodologia: PL/SIL richiesto e ottenuto}
+\begin{enumerate}
+    \item Si valuta il pericolo del caso sotto esame con una misurazione \textbf{qualitativa a priori}: si determina il PL o SIL \textbf{richiesto} alla funzione di sicurezza;
+    \item in base al PL/SIL richiesto si effettuano \emph{a posteriori} scelte di progetto sul dispositivo, che portano a una funzione di sicurezza il cui PL/SIL \textbf{ottenuto} viene calcolato con metodi quantitativi;
+    \item il PL o SIL \textbf{ottenuto deve essere maggiore o uguale} a quello richiesto ($\mathrm{PL} \ge \mathrm{PL_r}$).
+\end{enumerate}
+
+\subsection{SIL (IEC 62061)}
+Il \textbf{SIL} determina il grado di affidabilità richiesto a una \emph{SRCF} ed è espresso sulla base di una scala di probabilità oraria di verificarsi di un guasto pericoloso, quantificata dal \textbf{PFH$_D$} (\emph{Probability of dangerous Failure per Hour}):
+\begin{itemize}
+    \item esempio: SIL 1 significa che un guasto pericoloso può avvenire in un intervallo compreso tra centomila e un milione di ore;
+    \item PFH$_D$ = $10^{-6}$ $\Rightarrow$ 1 guasto ogni $10^6$ ore (pari a circa 10 anni);
+    \item quindi SIL 1 corrisponde a un guasto pericoloso possibile in un intervallo tra 1 anno e 10 anni.
+\end{itemize}
+
+\subsection{PL (ISO 13849-1)}
+Il \textbf{PL} è la capacità di un sistema di protezione di realizzare una funzione di sicurezza; è definito in base alla probabilità di guasto pericoloso come conseguenza di guasti hardware casuali potenzialmente pericolosi. Tale probabilità dipende da diversi parametri, tra cui il \textbf{MTTF$_d$} (Mean Time To dangerous Failure), che dipende dall'architettura del sistema (o sottosistema) e dalla stima dello stesso parametro per i singoli componenti.
+
+\subsection{Determinazione qualitativa del PL richiesto (PL$_r$)}
+\begin{enumerate}
+    \item Analisi e valutazione qualitativa del rischio associato alla funzione di sicurezza;
+    \item per ciascun rischio viene assegnato il \textbf{PL$_r$} (PL richiesto) attraverso un processo decisionale qualitativo (grafico normativo basato su: gravità delle conseguenze, frequenza ed esposizione al pericolo, possibilità di evitare il pericolo).
+\end{enumerate}
+
+\subsection{Determinazione qualitativa del SIL richiesto}
+In base alla \textbf{somma dei punteggi} di durata, probabilità ed evitabilità, assegnati per un evento pericoloso, si determina la \textbf{classe}; successivamente, dall'intersezione fra la colonna «conseguenze» e la colonna «classe», si ricava in maniera qualitativa il \textbf{SIL} da assegnare alla funzione di sicurezza. «OM» sta per «altre misure» (\emph{other measures}) da utilizzare a livello di sistema.
+
+\subsection{Corrispondenza tra PL e SIL}
+I due parametri sono correlati: tabelle normative mettono in corrispondenza i livelli PL (da \emph{a} a \emph{e}) con i livelli SIL (1--3), essendo entrambi basati su intervalli di PFH$_D$.
+
+\section{Implementazione della funzione di sicurezza}
+Il passo successivo consiste nel definire la parte del sistema di controllo che implementa la funzione di sicurezza (SRP/CS) e, una volta definito tale sottosistema, determinarne:
+\begin{itemize}
+    \item la \textbf{Categoria}, ovvero l'architettura (in serie, in parallelo/ridondante, con struttura diagnostica, ecc.);
+    \item il \textbf{MTTF$_D$};
+    \item il \textbf{DC} (diagnostic coverage);
+    \item il \textbf{CCF} (guasti da causa comune: derivano da un unico evento e non dipendono gli uni dagli altri; esempio: un fulmine mette fuori uso sia il sensore di contatto sia il sistema che lo controlla).
+\end{itemize}
+
+\subsection{MTBF$_d$: tempo tra due guasti pericolosi}
+Il \textbf{MTTF$_d$} (Mean Time To dangerous Failure) è il parametro principale che definisce l'affidabilità di un componente o sistema. Nei contesti produttivi si usano componenti sostituibili o riparabili, quindi interessa la distanza temporale tra due guasti:
+\begin{key}
+\[ \mathrm{MTBF_d} = \mathrm{MTTF_d} + \mathrm{MTTR} \]
+\end{key}
+dove \textbf{MTTR} (Mean Time To Repair) è il valore atteso del tempo di ripristino della funzionalità (riparazione o sostituzione). Quando può essere trascurato: $\mathrm{MTBF_d} \cong \mathrm{MTTF_d}$.
+
+\subsection{DC — Diagnostic Coverage}
+La copertura diagnostica è il rapporto fra la frequenza dei guasti pericolosi \textbf{rilevati} $\lambda_{dd}$ e la frequenza dei guasti pericolosi \textbf{totali} $\lambda_d$:
+\begin{key}
+\[ DC = \frac{\lambda_{dd}}{\lambda_d} \]
+\end{key}
+
+\subsection{Categorie (architetture)}
+Le categorie sono associate ad architetture con differente:
+\begin{enumerate}
+    \item ridondanza;
+    \item comportamento al guasto;
+    \item requisiti richiesti;
+    \item principi per raggiungere la sicurezza funzionale (e in generale il comportamento della parte che implementano).
+\end{enumerate}
+Utilizzando sistemi con categoria più alta è possibile raggiungere livelli di sicurezza più alti in termini di probabilità di guasto.
+
+\subsubsection{Architetture IEC 62061}
+\begin{description}
+    \item[Architettura A — tolleranza zero ai guasti, nessuna diagnostica.] Blocchi in \textbf{serie logica}: il guasto di uno solo determina la perdita della funzione di sicurezza. Se si conoscono i tassi di guasto pericoloso di ogni elemento, è possibile determinare il tasso di guasto pericoloso del sottosistema.
+    \item[Architettura B — tolleranza singola ai guasti, nessuna diagnostica.] Due blocchi in \textbf{parallelo logico}: la perdita della funzione di sicurezza si ha solo nel caso di guasto di entrambi i blocchi (attenzione al CCF, Common Cause Failure).
+    \item[Architettura C — tolleranza zero ai guasti, con diagnostica.] Blocchi in serie logica, ma è inserito un \textbf{blocco diagnostico} (eventualmente integrato a livello del singolo sottosistema) che, rilevato il guasto, attiva una reazione successiva all'avaria: garantisce un intervento tempestivo ed evita la perdita della funzione di sicurezza.
+    \item[Architettura D — tolleranza singola ai guasti, con diagnostica.] Due blocchi in parallelo logico con \textbf{blocco diagnostico} che, rilevati guasti, attiva opportune azioni correttive.
+\end{description}
+
+\subsubsection{Categorie ISO 13849-1}
+\begin{description}
+    \item[Categoria B.] Architettura a \textbf{canale singolo} composta da: blocco di Input o sensori (blocco I), blocco di logica per l'elaborazione dei dati (blocco L), blocco di Output o attuazione (blocco O), un canale che soddisfa \textbf{requisiti minimi} di affidabilità (un guasto può portare alla perdita della funzione di sicurezza). Nessuna copertura diagnostica (DC); MTTF$_d$ da basso a medio; CCF non applicabile.
+    \item[Categoria 1.] Simile alla categoria B ma con \textbf{MTTF$_d$ più alto}.
+    \item[Categoria 2.] Canale singolo con aggiunto un \textbf{ramo di test} della funzione di sicurezza: verifica effettuata ad opportuni intervalli di tempo, nei momenti e nelle fasi più significative (avvio, esecuzione di movimenti e procedure pericolose). Quando il guasto è rilevato, il sistema porta la macchina in condizione sicura mantenuta finché il guasto non è eliminato. Vincoli importanti: (1) frequenza di richiesta dell'azione di sicurezza pari a 1/100 della frequenza di test; (2) MTTF$_d$ del canale di test maggiore della metà del MTTF$_d$ del canale della funzione.
+    \item[Categorie 3 e 4.] Architetture a \textbf{canale doppio}: le unità logiche dei due canali sono dotate di funzione di diagnostica, effettuata sia sulla base di segnali di monitoraggio sia per mezzo dell'analisi dei dati scambiati. \textbf{Categoria 3}: un singolo guasto non deve portare alla perdita della funzione di sicurezza e deve essere possibilmente rivelato. \textbf{Categoria 4}: un singolo guasto deve essere rivelato in occasione della richiesta della funzione di sicurezza o prima della richiesta successiva.
+\end{description}
+
+\subsection{Relazione tra Categorie, DC, MTTF$_d$ e PL}
+Il grafico normativo (EN ISO 13849-1) mostra che il PL ottenibile dipende dalla combinazione di \textbf{categoria}, \textbf{DC$_{avg}$} e \textbf{MTTF$_d$}:
+\begin{itemize}
+    \item la \textbf{categoria} descrive l'architettura del sistema di controllo di sicurezza: strutture più robuste consentono PL più elevati;
+    \item il \textbf{DC$_{avg}$} esprime la capacità di rilevare i guasti pericolosi: all'aumentare della copertura diagnostica aumenta il PL ottenibile;
+    \item il \textbf{MTTF$_d$} rappresenta l'affidabilità dei componenti rispetto ai guasti pericolosi: componenti più affidabili, in un'architettura adeguata, permettono PL più alti.
+\end{itemize}
+
+\section{Acronimi}
+\begin{itemize}
+    \item \textbf{IEC}: International Electrotechnical Commission;
+    \item \textbf{ISO}: International Organization for Standardization (ma anche \emph{ìsos}, uguale);
+    \item \textbf{UNI}: Ente nazionale italiano di unificazione;
+    \item \textbf{EN}: norme elaborate dal CEN (Comité Européen de Normalisation), Organismo di Normazione Europea. I Paesi membri CEN devono obbligatoriamente recepire le norme EN (in Italia diventano UNI EN).
+\end{itemize}
+
+\begin{note}[Bibliografia]
+Sicurezza funzionale dei sistemi di controllo delle macchine: requisiti ed evoluzione della normativa, INAIL, 2013; EN 954-1:1996; EN ISO 13849-1:2006 + EC1:2009; EN IEC 62061:2005 (CEI 44-16).
+\end{note}

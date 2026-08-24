@@ -1,0 +1,210 @@
+% ============================================================
+% Capitolo 2 — Strutture di flusso e controllo in ST
+% (Strutture_ST_Flusso_Controllo.pdf)
+% ============================================================
+\chapter{Structured Text: strutture di flusso e controllo}
+\label{cap:strutture-st}
+
+Lo \textbf{Structured Text} (ST) è un linguaggio testuale per PLC (standard \textbf{IEC 61131-3}) che permette di esprimere algoritmi in modo strutturato: sequenze di istruzioni, selezione tra alternative, ripetizione controllata di blocchi di codice e organizzazione in stati.
+
+\begin{note}[Contesto PLC: lo scan]
+Nella maggior parte dei PLC il programma gira in \textbf{cicli} (\emph{scan}): ad ogni ciclo si leggono gli ingressi, si esegue la logica e si aggiornano le uscite. Per questo motivo, quando possibile, è preferibile scrivere logiche che avanzano «a passi» (ad esempio una macchina a stati) invece di cicli lunghi che potrebbero allungare il tempo di ciclo.
+\end{note}
+
+\section{Sequenza (esecuzione in ordine)}
+Le istruzioni sono eseguite dall'alto verso il basso:
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+a := 10;
+b := a + 5;
+MotorOn := (b > 12);
+\end{lstlisting}
+
+\section{Selezione: IF / ELSIF / ELSE}
+Sceglie tra rami alternativi sulla base di condizioni booleane:
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+IF Temp > 80.0 THEN
+     Alarm := TRUE;
+ELSIF Temp > 60.0 THEN
+     Warning := TRUE;
+ELSE
+     Alarm := FALSE;
+     Warning := FALSE;
+END_IF;
+\end{lstlisting}
+Suggerimenti: usare \texttt{ELSIF} per evitare annidamenti profondi; rendere le condizioni leggibili (parentesi e nomi chiari) per facilitare la manutenzione.
+
+\section{Selezione multipla: CASE ... OF}
+Utile quando le alternative dipendono dal valore di una singola variabile (modalità, comando, stato):
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+CASE Mode OF
+    0: (* Stop *)
+        Motor := FALSE;
+    1: (* Manuale *)
+        Motor := StartButton;
+    2: (* Automatico *)
+        Motor := AutoEnable AND Ready;
+ELSE
+    (* Valore non previsto *)
+    Motor := FALSE;
+END_CASE;
+\end{lstlisting}
+
+\section{Iterazione: FOR ... DO}
+Ripete un blocco un numero finito di volte (tipico per scorrere array o fare accumuli):
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+Sum := 0;
+FOR i := 1 TO 10 DO
+    Sum := Sum + A[i];
+END_FOR;
+\end{lstlisting}
+
+\section{Iterazione: WHILE ... DO (con cautela)}
+Ripete finché la condizione è vera:
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+WHILE (x < 100) DO
+    x := x + 1;
+END_WHILE;
+\end{lstlisting}
+\begin{note}[Attenzione]
+Nei PLC un \texttt{WHILE} può allungare il tempo di ciclo se la condizione resta vera troppo a lungo. Usarlo solo se si è certi che termini rapidamente (o se l'ambiente/standard locale lo consente in modo sicuro).
+\end{note}
+
+\section{Iterazione: REPEAT ... UNTIL}
+Esegue il corpo almeno una volta, poi verifica la condizione di uscita:
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+REPEAT
+    x := x + 1;
+UNTIL x >= 10
+END_REPEAT;
+\end{lstlisting}
+
+\section{Uscita dai cicli: EXIT (e talvolta CONTINUE)}
+\texttt{EXIT} esce dal ciclo più interno; \texttt{CONTINUE} (se supportato) salta alla prossima iterazione:
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+Found := FALSE;
+FOR i := 1 TO N DO
+    IF A[i] = Target THEN
+         Found := TRUE;
+         EXIT; (* esce dal FOR *)
+    END_IF;
+END_FOR;
+\end{lstlisting}
+
+\section{Blocchi e commenti}
+I blocchi sono delimitati dalle parole chiave di chiusura: \texttt{END\_IF}, \texttt{END\_CASE}, \texttt{END\_FOR}, \texttt{END\_WHILE}, \texttt{END\_REPEAT}.
+
+Commenti:
+\begin{itemize}
+    \item \texttt{(* ... *)} commento multi-linea (standard e molto usato);
+    \item \texttt{// ...} commento a fine riga (spesso supportato; dipende dal vendor).
+\end{itemize}
+
+\section{Pattern tipico PLC: macchina a stati con CASE}
+Per sequenze operative e automazioni a passi, una macchina a stati evita cicli lunghi e rende esplicite le transizioni:
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+CASE State OF
+    0: (* Idle *)
+        Motor := FALSE;
+        IF Start THEN
+            State := 10;
+        END_IF;
+    10: (* Avvio *)
+        Motor := TRUE;
+        IF SpeedOK THEN
+            State := 20;
+        END_IF;
+    20: (* Run *)
+        IF Stop THEN
+            State := 0;
+        END_IF;
+END_CASE;
+\end{lstlisting}
+
+\begin{note}[Mini-riepilogo: scelta del costrutto]
+\begin{itemize}
+    \item \texttt{IF/ELSIF/ELSE}: soglie, abilitazioni, logica combinatoria con pochi casi;
+    \item \texttt{CASE}: molte alternative basate su una variabile (modalità/stato);
+    \item \texttt{FOR}: array e conteggi finiti;
+    \item \texttt{WHILE/REPEAT}: raramente nei PLC; solo se terminano rapidamente e con motivazione chiara;
+    \item \texttt{CASE} + \texttt{State}: sequenze e automazioni step-by-step (molto consigliato in ambito PLC).
+\end{itemize}
+\end{note}
+
+\section{Operatori logici e di confronto}
+Le condizioni in \texttt{IF}/\texttt{WHILE}/\texttt{REPEAT} e le espressioni booleane usano operatori logici (su \texttt{BOOL}) e di confronto. Gli stessi operatori logici possono lavorare \textbf{bit-a-bit} su tipi a bit (\texttt{BYTE}/\texttt{WORD}/\texttt{DWORD}/\texttt{LWORD}).
+
+Operatori logici principali (su \texttt{BOOL}):
+\begin{itemize}
+    \item \texttt{NOT A}: negazione;
+    \item \texttt{A AND B}: vero se entrambi veri;
+    \item \texttt{A OR B}: vero se almeno uno è vero;
+    \item \texttt{A XOR B}: vero se esattamente uno è vero.
+\end{itemize}
+
+Operatori di confronto più comuni:
+\begin{itemize}
+    \item \texttt{=} uguaglianza, \texttt{<>} diverso;
+    \item \texttt{<}, \texttt{>}, \texttt{<=}, \texttt{>=} confronti (tipicamente su numeri; spesso anche su \texttt{TIME}/\texttt{DATE} a seconda del sistema).
+\end{itemize}
+
+\begin{note}[Precedenza]
+Regola pratica: \texttt{NOT} ha precedenza più alta, poi \texttt{AND}, poi \texttt{XOR}, poi \texttt{OR}. In caso di dubbio usare sempre le parentesi per rendere esplicita l'intenzione.
+\end{note}
+
+Esempi:
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+(* Interlock logico: abilita uscita solo se non c'e' guasto
+   e la pressione e' sufficiente *)
+Out := Enable AND NOT Fault AND (Pressure > 2.0);
+
+(* Test di appartenenza a intervallo *)
+InRange := (x >= 10) AND (x <= 20);
+
+(* De Morgan (utile per semplificare/trasformare condizioni) *)
+Safe := NOT (A OR B);   (* equivalente a (NOT A) AND (NOT B) *)
+\end{lstlisting}
+
+\section{Tipi di dati principali in ST}
+ST usa i tipi standard IEC 61131-3 (nomi e disponibilità possono variare leggermente tra ambienti, ma le famiglie principali sono comuni).
+
+\subsection{Tipi logici e numerici}
+\begin{itemize}
+    \item \texttt{BOOL}: vero/falso (\texttt{TRUE}/\texttt{FALSE});
+    \item Interi: \texttt{SINT}, \texttt{INT}, \texttt{DINT}, \texttt{LINT} e varianti senza segno (\texttt{USINT}, \texttt{UINT}, \texttt{UDINT}, \texttt{ULINT});
+    \item Reali: \texttt{REAL} (32 bit), \texttt{LREAL} (64 bit).
+\end{itemize}
+
+\subsection{Tipi temporali (molto usati nei PLC)}
+\begin{itemize}
+    \item \texttt{TIME}: durata (es.\ \texttt{T\#200ms}, \texttt{T\#2s}, \texttt{T\#1m});
+    \item \texttt{DATE}, \texttt{TIME\_OF\_DAY} (TOD), \texttt{DATE\_AND\_TIME} (DT): data/ora (se supportati e configurati).
+\end{itemize}
+
+\subsection{Tipi a bit e testi}
+\begin{itemize}
+    \item \texttt{BYTE}, \texttt{WORD}, \texttt{DWORD}, \texttt{LWORD}: bit string; \texttt{AND}/\texttt{OR}/\texttt{XOR}/\texttt{NOT} agiscono bit-a-bit;
+    \item \texttt{STRING[n]}, \texttt{WSTRING[n]}: stringhe (lunghezza massima $n$).
+\end{itemize}
+
+\subsection{Strutture dati}
+\begin{itemize}
+    \item \texttt{ARRAY[low..high] OF T}: vettori/matrici (es.\ misure campionate);
+    \item \texttt{STRUCT}: record/strutture (se supportato; utile per raggruppare campi).
+\end{itemize}
+
+Esempio di dichiarazioni (schema tipico):
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+VAR
+    Alarm   : BOOL;
+    Counter : DINT;
+    Temp    : REAL;
+    tDelay  : TIME := T#2s;
+    Mode    : INT;
+    Name    : STRING[20];
+    A       : ARRAY[1..10] OF REAL;
+END_VAR
+\end{lstlisting}
+
+\begin{note}[Conversioni di tipo]
+Per conversioni tra tipi (ad esempio \texttt{INT} $\to$ \texttt{REAL}) si usano funzioni standard come \texttt{INT\_TO\_REAL}, \texttt{REAL\_TO\_INT}, ecc. Il nome esatto può dipendere dall'ambiente, ma il concetto è sempre lo stesso: rendere \textbf{esplicita} la conversione quando cambia il tipo.
+\end{note}

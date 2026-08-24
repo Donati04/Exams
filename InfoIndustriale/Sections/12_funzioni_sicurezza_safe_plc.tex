@@ -1,0 +1,232 @@
+% ============================================================
+% Capitolo 12 — Funzioni di sicurezza con Safe PLC
+% (20250401 Funzioni di sicurezza con Safe PLC.pdf)
+% ============================================================
+\chapter{Programmazione di funzioni di sicurezza in ST: casi di studio}
+\label{cap:safe-plc}
+
+\section{Introduzione}
+La sicurezza funzionale nelle macchine è regolata da standard come \textbf{IEC 62061} (derivato da IEC 61508, focalizzato sui SIL) e \textbf{ISO 13849-1} (che introduce i PL, con categorie ereditate da EN 954-1), visti nel Capitolo~\ref{cap:normative}. In entrambi gli standard la probabilità di guasto pericoloso di una funzione di sicurezza viene quantificata in termini di intervalli di \textbf{PFH$_D$}. Ad esempio, \textbf{PL e} (il livello più alto di ISO 13849-1) corrisponde a un intervallo di PFH$_D$ molto basso (circa $10^{-8}$--$10^{-7}$ per ora) ed è equivalente, in termini di affidabilità richiesta, a un \textbf{SIL 3}.
+
+Una funzione di sicurezza deve raggiungere almeno il PL o SIL \textbf{richiesto} (PL$_r$ o SIL$_r$) emerso dall'analisi dei rischi, e questo va dimostrato tramite calcoli quantitativi (MTTF$_d$, PFH$_D$, ecc.) dopo aver progettato l'architettura di sicurezza appropriata.
+
+Nell'ambiente \textbf{CODESYS} (piattaforma IEC 61131-3) è possibile programmare funzioni di sicurezza in Structured Text sfruttando PLC di sicurezza.
+
+\section{Esempio 1: Funzione di Arresto di Emergenza (E-Stop)}
+\subsection{Requisiti normativi}
+Una funzione di arresto di emergenza serve a arrestare rapidamente un macchinario in caso di pericolo imminente, tramite uno o più \textbf{pulsanti a fungo} di emergenza distribuiti sulla macchina. Secondo la norma \textbf{ISO 13850}, il dispositivo di E-Stop deve essere:
+\begin{itemize}
+    \item facilmente accessibile;
+    \item capace di provocare l'arresto del processo pericoloso \textbf{nel tempo più breve possibile}, senza creare rischi supplementari.
+\end{itemize}
+
+Dal punto di vista elettrico, l'arresto di emergenza può essere implementato come:
+\begin{itemize}
+    \item \textbf{Stop di Categoria 0}: arresto immediato mediante rimozione dell'energia;
+    \item \textbf{Stop di Categoria 1}: arresto controllato seguito da rimozione dell'energia.
+\end{itemize}
+Nell'esempio si considera uno stop di Categoria 0 che apre immediatamente il circuito di potenza del motore.
+
+\subsection{Struttura I--L--O della funzione}
+\begin{itemize}
+    \item \textbf{Sensore (I, Input)}: pulsante di emergenza tipicamente con contatti \textbf{NC} (normalmente chiusi) collegati a \textbf{due ingressi di sicurezza separati} nel PLC (canale doppio) per tollerare eventuali guasti;
+    \item \textbf{PLC (L, Logica)}: nel codice ST si mappano gli ingressi a variabili booleane e si comanda un'uscita di sicurezza verso il contattore;
+    \item \textbf{Attuatore (O, Output)}: per fermare un motore in modo sicuro la funzione può agire su due dispositivi:
+    \begin{enumerate}
+        \item \textbf{contattore di sicurezza};
+        \item \textbf{ingresso STO} (Safe Torque Off) di un inverter, che toglie alimentazione al motore.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Programma ST}
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+PROGRAM Safety_EStop
+VAR
+  EStop_Ch1 AT %I0.0 : BOOL; // Canale 1 pulsante E-Stop (NC, TRUE = non premuto)
+  EStop_Ch2 AT %I0.1 : BOOL; // Canale 2 pulsante E-Stop (NC)
+  ResetButton AT %I0.2 : BOOL; // Pulsante di reset manuale
+  SafeOut AT %Q0.0 : BOOL; // Uscita di sicurezza verso contattore motore
+  EStop_Latch : BOOL := FALSE; // Latch di stato di emergenza attivo
+END_VAR
+
+// Rilevazione comando di E-Stop
+IF (NOT EStop_Ch1) OR (NOT EStop_Ch2) THEN
+  SafeOut := FALSE;    // disattiva immediatamente uscita sicura
+  EStop_Latch := TRUE; // entra nello stato di arresto di emergenza latched
+END_IF;
+
+// Mantiene il motore fermo finché l'emergenza non viene resettata
+IF EStop_Latch THEN
+  SafeOut := FALSE;
+END_IF;
+
+// Reset manuale: pulsante rilasciato (entrambi i canali chiusi) e reset premuto
+IF EStop_Latch AND EStop_Ch1 AND EStop_Ch2 AND ResetButton THEN
+  EStop_Latch := FALSE; // esce dallo stato di emergenza
+  SafeOut := TRUE;      // riabilita uscita di sicurezza
+END_IF;
+\end{lstlisting}
+
+\begin{note}[Mappatura dei segnali: AT \%I e AT \%Q]
+\texttt{AT \%I0.n} indica il \textbf{morsetto di ingresso} del PLC a cui è collegata la variabile; \texttt{AT \%Q0.n} indica il \textbf{morsetto di uscita}.\\
+\texttt{EStop\_Ch1 AT \%I0.0}: «prendi lo stato del segnale fisico che arriva all'ingresso numero 0.0 del modulo di ingresso 0 e rendilo disponibile nella variabile \texttt{EStop\_Ch1}».\\
+\texttt{SafeOut := TRUE} attiva fisicamente l'uscita (\%Q0.0) che comanda il contattore (alimenta il motore); \texttt{SafeOut := FALSE} la disattiva (interrompe l'alimentazione al motore).
+\end{note}
+
+\subsection{Analisi del comportamento}
+Quando il pulsante di emergenza viene premuto, uno o entrambi i canali \texttt{EStop\_Ch1}/\texttt{Ch2} passano a FALSE (contatto aperto): la logica forza immediatamente \texttt{SafeOut := FALSE} disattivando il contattore (arresto del motore).
+
+La variabile \texttt{EStop\_Latch} garantisce che il sistema resti nello stato di arresto di emergenza finché l'operatore non resetta manualmente: anche se il pulsante viene rilasciato (i canali tornano TRUE), l'uscita di sicurezza non si riattiva finché non viene premuto il pulsante di reset. Questa misura previene \textbf{riavvii automatici indesiderati}: il riavvio dopo un'emergenza deve avvenire solo tramite un'\textbf{azione volontaria}.
+
+\subsection{Tabella di verità con guasti}
+La condizione di stop è \texttt{(NOT EStop\_Ch1) OR (NOT EStop\_Ch2)}:
+\begin{center}
+\begin{tabular}{cc|cc|c}
+\texttt{EStop\_Ch1} & \texttt{EStop\_Ch2} & \texttt{NOT Ch1} & \texttt{NOT Ch2} & \texttt{SafeOut} (stop)\\
+\hline
+0 & 0 & 1 & 1 & 1 (stop)\\
+0 & 1 & 1 & 0 & 1 (stop)\\
+1 & 0 & 0 & 1 & 1 (stop)\\
+1 & 1 & 0 & 0 & 0 (ok)\\
+\end{tabular}
+\end{center}
+Basta che \emph{un solo} canale si apra (guasto o pressione) perché la funzione di sicurezza scatti.
+
+\subsection{Perché i contatti NC rendono il sistema fail-safe}
+In caso di guasto o rottura di un componente (sensore, cablaggio) il sistema si porta automaticamente in uno stato sicuro:
+\begin{itemize}
+    \item[A.] In condizioni normali (senza guasti) il segnale è \texttt{TRUE} (circuito chiuso, corrente che passa);
+    \item[B.] Se il sensore si guasta (cavo rotto o scollegato) il circuito si apre $\to$ corrente interrotta $\to$ segnale immediatamente \texttt{FALSE}.
+\end{itemize}
+Poiché la logica di sicurezza interpreta lo stato \texttt{FALSE} come situazione di pericolo o guasto, ogni interruzione accidentale porta automaticamente il sistema in condizione di sicurezza. Il sensore NC usa la \textbf{presenza di corrente} (\texttt{TRUE}) come indicatore di «tutto a posto» e la \textbf{mancanza di corrente} (\texttt{FALSE}) come indicatore di «pericolo o guasto».
+
+\begin{ex}[I tre scenari del contatto NC]
+\begin{itemize}
+    \item \textbf{Normale}: pulsante non premuto $\to$ contatto NC chiuso $\to$ \%I0.0 = TRUE $\to$ «situazione normale», motore abilitato;
+    \item \textbf{Emergenza}: pulsante premuto $\to$ contatto NC si apre $\to$ \%I0.0 = FALSE $\to$ sistema rileva immediatamente l'emergenza, motore fermato;
+    \item \textbf{Guasto accidentale}: cavo rotto o connettore staccato $\to$ circuito aperto $\to$ \%I0.0 = FALSE $\to$ interpretato immediatamente come emergenza, motore fermato.
+\end{itemize}
+\end{ex}
+
+\begin{note}[E con un sensore NO (Normally Open)?]
+Con un sensore NO (normalmente \texttt{FALSE}): normale funzionamento = contatto aperto (\%I = FALSE); emergenza = contatto chiuso (\%I = TRUE). Problema: se il filo si rompe, il sistema vede comunque \texttt{FALSE}, che per un contatto NO significa «tutto normale». Un guasto passerebbe \textbf{inosservato}, creando una situazione potenzialmente pericolosa. Per questo i contatti NO non sono tipicamente impiegati per sensori critici di sicurezza.
+\end{note}
+
+\subsection{Gli attuatori: principio fail-safe}
+Per un attuatore (contattore, valvola, relè di sicurezza) il principio fail-safe significa che, in caso di guasto, perdita di alimentazione o interruzione del comando, l'attuatore assume automaticamente la \textbf{posizione più sicura possibile}:
+\begin{itemize}
+    \item stato sicuro = \textbf{assenza} di alimentazione (contatto aperto o valvola chiusa);
+    \item stato operativo normale = \textbf{presenza} di alimentazione (contatto chiuso o valvola aperta).
+\end{itemize}
+
+\begin{defn}[Contattore di sicurezza]
+Particolare tipo di relè elettromeccanico progettato specificamente per funzioni di sicurezza: quando attivato dalla funzione di sicurezza (ad esempio un arresto di emergenza) apre il circuito di potenza e \textbf{scollega fisicamente il motore} dall'alimentazione elettrica. È «di sicurezza» perché ha caratteristiche che garantiscono un'apertura affidabile e sicura del circuito (ad esempio \textbf{contatti a guida forzata} che non possono bloccarsi in posizione chiusa).
+\end{defn}
+
+Funzionamento: quando il PLC di sicurezza invia \texttt{TRUE}, la bobina si eccita e chiude il contatto (alimentazione al motore, condizione normale); in emergenza il PLC invia \texttt{FALSE}, la bobina si diseccita e il contatto si apre immediatamente, arrestando il movimento. Se si rompe un filo o si guasta la bobina, il contattore si diseccita automaticamente (non riceve alimentazione), aprendo il circuito e mettendo il sistema in sicurezza.
+
+\begin{defn}[STO — Safe Torque Off]
+Funzione di sicurezza inclusa in molti azionamenti elettronici (inverter): quando il segnale STO è attivato dalla funzione di sicurezza, l'inverter \textbf{interrompe immediatamente la generazione della coppia motrice}, anche se rimane alimentato elettricamente. Il motore non può produrre movimenti pericolosi senza rimuovere fisicamente la tensione dall'inverter. Soluzione molto affidabile, tipicamente certificata fino a SIL 3 o PL e.
+\end{defn}
+
+\subsection{Categoria di sicurezza della funzione E-Stop}
+I due canali ridondanti permettono di \textbf{tollerare un singolo guasto}: se un contatto del pulsante si guastasse bloccandosi chiuso, l'altro canale può ancora comandare lo stop. Inoltre, con opportune verifiche di \textbf{coerenza tra i due canali} è possibile individuare guasti latenti (diagnostica): ad esempio si può monitorare la \textbf{simultaneità dei cambi di stato} dei due ingressi. In applicazioni reali si usa il blocco funzione \texttt{SF\_Equivalent} della libreria di sicurezza PLCopen per controllare che i due canali dell'E-Stop commutino entro un certo tempo, rilevando eventuali discordanze.
+
+L'architettura implementata è a \textbf{due canali ridondanti con rilevamento di guasto} (confronto dei canali): corrisponde a una \textbf{Categoria 3 o 4} (ISO 13849-1) a seconda del grado di diagnostica — se ogni singolo guasto non provoca la perdita della funzione di arresto ed è possibilmente rivelato (Cat.\ 3) o sempre rivelato prima della successiva richiesta (Cat.\ 4). La funzione può raggiungere un PL molto alto (\textbf{PL d} o \textbf{PL e}): una funzione di E-Stop a due canali con componenti molto affidabili e diagnostica sufficiente può ottenere Categoria 3, PL e, come spesso richiesto per arresti di emergenza in macchine ad alto rischio.
+
+\section{Esempio 2: Funzione di Controllo Interblocco di un Riparo}
+\subsection{Descrizione}
+Un \textbf{interblocco di riparo} è una funzione di sicurezza che monitora lo stato di un riparo mobile (sportello o cancello di protezione) e assicura che la macchina si fermi quando il riparo è aperto. Spesso include un dispositivo di interlock:
+\begin{itemize}
+    \item la macchina non deve poter funzionare se il riparo non è chiuso e bloccato;
+    \item il riparo rimane bloccato (chiuso) finché l'area pericolosa non è in condizioni sicure (movimenti pericolosi fermi).
+\end{itemize}
+La funzione protegge l'operatore impedendogli l'accesso a parti pericolose in movimento e prevenendo riaccensioni accidentali quando il riparo è aperto.
+
+\subsection{Sensori e attuatori}
+\begin{itemize}
+    \item riparo dotato di \textbf{finecorsa di sicurezza a doppio canale} (due sensori o contatti ridondanti) per rilevare lo stato chiuso;
+    \item \textbf{attuatore di bloccaggio elettromagnetico} (elettroserratura) che tiene chiuso il riparo durante il funzionamento;
+    \item motore controllato da un \textbf{contattore di sicurezza} (lo stesso dell'E-Stop, ma comandato dall'interlock);
+    \item segnale di \textbf{richiesta sblocco} azionato dall'operatore (pulsante di richiesta accesso) e \textbf{pulsante di reset}.
+\end{itemize}
+
+\subsection{Programma ST}
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+PROGRAM Safety_Guard
+VAR
+  GuardClosed_Ch1 AT %I0.3 : BOOL; // Finecorsa riparo, canale 1 (TRUE = chiuso)
+  GuardClosed_Ch2 AT %I0.4 : BOOL; // Finecorsa riparo, canale 2
+  UnlockRequest AT %I0.5 : BOOL; // Pulsante richiesta sblocco riparo
+  ResetGuard AT %I0.6 : BOOL; // Pulsante di reset per il riparo
+  LockSolenoid AT %Q0.1 : BOOL; // Uscita elettroserratura (TRUE = bloccato)
+  SafeMotorEnable AT %Q0.2 : BOOL; // Abilitazione sicura motore (contattore/STO)
+  Guard_Latch : BOOL := FALSE; // Latch stato riparo aperto/fault
+END_VAR
+
+// Monitoraggio: se il riparo si apre (o un canale rileva aperto), arresta
+IF (NOT GuardClosed_Ch1) OR (NOT GuardClosed_Ch2) THEN
+   SafeMotorEnable := FALSE; // disabilita immediatamente il motore
+   Guard_Latch := TRUE;      // stato di fault/porta aperta (richiedera' reset)
+END_IF;
+
+// Blocco del riparo durante il funzionamento
+IF SafeMotorEnable THEN
+   LockSolenoid := TRUE;  // chiude elettroserratura (riparo bloccato)
+ELSE
+   LockSolenoid := FALSE; // motore non attivo: sblocca il riparo
+END_IF;
+
+// Mantiene il motore fermo finché il riparo non è chiuso e reset effettuato
+IF Guard_Latch THEN
+   SafeMotorEnable := FALSE;
+END_IF;
+
+// Reset: riparo di nuovo chiuso (entrambi i canali) e reset premuto
+IF Guard_Latch AND GuardClosed_Ch1 AND GuardClosed_Ch2 AND ResetGuard THEN
+   Guard_Latch := FALSE;
+END_IF;
+
+// Riabilitazione motore: solo riparo chiuso & bloccato e nessun latch attivo
+IF (NOT Guard_Latch) AND GuardClosed_Ch1 AND GuardClosed_Ch2
+   AND LockSolenoid THEN
+   SafeMotorEnable := TRUE;
+END_IF;
+\end{lstlisting}
+
+\subsection{Analisi del comportamento}
+Quando il riparo è aperto (uno dei sensori va a FALSE) la logica porta immediatamente \texttt{SafeMotorEnable} a FALSE (arresto sicuro del motore) e memorizza lo stato di interblocco aperto in \texttt{Guard\_Latch}. Simultaneamente la bobina di blocco \texttt{LockSolenoid} viene rilasciata (FALSE) per consentire l'apertura del riparo. Finché il riparo non torna chiuso e non si effettua il reset manuale, \texttt{Guard\_Latch} rimane TRUE e impedisce la riattivazione del motore.
+
+La sequenza garantisce che:
+\begin{enumerate}
+    \item la macchina \textbf{si ferma sempre} se il riparo non è chiuso/bloccato;
+    \item il riparo può sbloccarsi \textbf{solo} quando la macchina è in stato sicuro (motore fermo);
+    \item la ripartenza richiede che il riparo sia richiuso e un reset sia premuto: niente riavvii automatici pericolosi.
+\end{enumerate}
+
+\subsection{Categoria di sicurezza della funzione di interblocco}
+Anche l'interblocco di riparo è realizzato con due canali di rilevamento e blocco, analogamente all'E-Stop, e può raggiungere \textbf{Categoria 4, PL e} impiegando componenti ad alta affidabilità e diagnostica completa. Nei ripari interbloccati si tende a richiedere il massimo livello (PL e), dato il rischio di accesso dell'operatore a parti pericolose: tipicamente si usano sensori ridondanti e autodiagnosticati, e si implementano misure contro i guasti da causa comune (CCF) per soddisfare la Categoria 4.
+
+\subsection{Integrazione di sensori e attuatori di sicurezza}
+\begin{itemize}
+    \item I sensori di sicurezza sono spesso \textbf{NC} per essere fail-safe (un'interruzione del circuito causa immediatamente FALSE, rilevato come guasto). Nel codice bisogna tenere conto della logica inversa dei NC (come fatto con \texttt{NOT EStop\_ChX});
+    \item gli attuatori di sicurezza spesso richiedono una \textbf{logica attiva a livello basso} per il fail-safe (es.\ un contattore si eccita con TRUE per dare energia: FALSE = sicuro).
+\end{itemize}
+
+\section{PLC di sicurezza (Safety PLC)}
+\begin{defn}[Safety PLC]
+Controllori logici programmabili specificamente \textbf{progettati, realizzati e certificati} per realizzare funzioni di sicurezza in applicazioni industriali dove occorre garantire affidabilità assoluta, evitando che un guasto o un errore possa portare a situazioni pericolose per persone, macchinari o ambiente. Rispetto ai normali PLC hanno caratteristiche specifiche, certificate e garantite secondo standard.
+\end{defn}
+
+Caratteristiche principali:
+\begin{itemize}
+    \item \textbf{Architettura ridondante interna}: spesso almeno due processori interni lavorano in parallelo, elaborando le stesse informazioni e confrontandole continuamente per identificare eventuali guasti hardware, portando il sistema verso uno stato fail-safe (nota: soltanto quando esiste effettivamente uno stato fail-safe fisicamente raggiungibile!);
+    \item \textbf{Autodiagnostica integrata}: test automatici continui su memoria, processori, ingressi e uscite; rilevano immediatamente guasti o anomalie e reagiscono portando il sistema in stato sicuro;
+    \item \textbf{Certificazione di sicurezza}: progettati, testati e certificati (ad esempio dal TÜV) per soddisfare livelli precisi di sicurezza (SIL 2, SIL 3, PL d, PL e), con documentazione certificata del produttore;
+    \item \textbf{Ingressi e uscite di sicurezza}: moduli dedicati, ridondanti, con diagnostica integrata;
+    \item \textbf{Librerie software certificate}: funzioni certificate per le principali funzioni di sicurezza (arresto emergenza, monitoraggio ripari, interblocchi, comandi a due mani, ecc.).
+\end{itemize}
+
+\begin{note}[Il software di un PLC di sicurezza è sicuro anch'esso?]
+Il software di un PLC di sicurezza può rappresentare il \textbf{punto debole} (e quindi pericoloso) dell'intera architettura dedicata alla sicurezza. Il linguaggio ST viene usato solo per separare «zone» di codice con diverse funzionalità durante l'esecuzione: si passa attraverso diverse fasi (attuazione, gestione, uscita dall'emergenza) con un linguaggio che prevede costrutti sintattici al pari di C o Pascal, ma di cui viene utilizzato \textbf{solo il costrutto IF} per simulare un formalismo a stati. Può non essere semplice distinguere le condizioni di attivazione e di permanenza delle diverse fasi. Un \textbf{linguaggio basato sugli stati}, poi tradotto in ST attraverso una struttura \texttt{CASE OF}, rende la progettazione del software più semplice e sicura.
+\end{note}
