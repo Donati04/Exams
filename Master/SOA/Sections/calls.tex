@@ -96,3 +96,36 @@ Ci sono diverse categorie:
   \item \textbf{Servizi di Bakcground:} alcuni servizi vengono lanciati nel tempo di boot, alcuni terminano, altri invece continuano a lavorare finchè il sistema non viene spento. \\ 
     Normalmente, quest'utlimi sono chiamati \textbf{demoni}.
 \end{itemize}
+
+\section{Linker e Loaders}
+Solitamente, un programma per essere eseguito da una CPU deve essere caricato nella memoria centrale e metto in lista come processo. Per fare questa cosa sono necessari diverse fasi. \\
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Images/calls/programm.jpg}
+    \caption{Ciclo completo di un programma C.}
+\end{figure}
+
+Per prima cosa, il programma viene compilato in un file oggetto per essere caricato in una memoria fisica. Questo formato è chiamato \textbf{file oggetto reallocabile}. \\ 
+Successivamente, il \textbf{linker} combina i vari file oggetto e le librerie necessarie in un unico file eseguibile. \\ 
+Infine, il \textbf{loader} si occupa di caricare il programma in memoria centrale per essere eseguito dalla CPU. Un'attività importante di questa fase è la \textbf{riallocazione}, dato che è necessario assegnare un indirizzo finale alle varie parti del programma, ai dati e pure al codice. \\
+\vspace*{0.01\textheight}
+I file oggetto e i file eseguibili presentano solitamente formati standard che includono il codice macchina compilato e una tabella dei simboli contenente metadati relativi a funzioni e variabili a cui il programma fa riferimento. 
+Per i sistemi UNIX e Linux, questo formato standard è noto come \textbf{ELF} (\textbf{Executable and Linkable Format}).
+
+\begin{ex}[Formato ELF]
+Con il comando \texttt{file} è possibile identificare e valutare i formati ELF. \\ 
+Per esempio con: 
+\[
+  \texttt{file main.o} \\ 
+\]
+verrà riportato che il \texttt{main.o} è un file ELF reallocabile.\\ 
+Invece: 
+\[ 
+  \texttt{file main} \\
+\]
+riporterà che \texttt{main} è un file ELF eseguibile.
+\end{ex}
+
+
+
